@@ -20,7 +20,6 @@ public class MemberManager {
                 return m;
             }
         }
-
         return null;
     }
 

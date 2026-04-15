@@ -3,8 +3,10 @@ import java.util.List;
 public abstract class User {
     protected String username;
     protected String password;
+    protected String name;
 
-    protected User(String username, String password) {
+    protected User(String name, String username, String password) {
+        this.name = name;
         this.username = username;
         this.password = password;
     }
