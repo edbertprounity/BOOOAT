@@ -5,40 +5,39 @@ public class Boat {
     private int capacity;
     private final BoatType BOAT_TYPE;
 
-    public Boat(String boatName, double price, BoatType boatType){
+    public Boat(String boatName, double price, BoatType boatType) {
         this.boatName = boatName;
         this.price = price;
         this.availability = true;
         this.BOAT_TYPE = boatType;
     }
 
-    String getName(){
+    String getName() {
         return this.boatName;
     }
 
-    double getPrice(){
+    double getPrice() {
         return this.price;
     }
 
-    BoatType getType(){
+    BoatType getType() {
         return this.BOAT_TYPE;
     }
 
-    int getCapacity(){
+    int getCapacity() {
         return this.capacity;
     }
 
-    boolean isAvailable(){
+    boolean isAvailable() {
         return this.availability;
     }
 
-    void setAvailability(boolean availability){
+    void setAvailability(boolean availability) {
         this.availability = availability;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Boat Details: \nBoat Name: " + this.boatName + " (" + this.BOAT_TYPE + ")";
     }
 }
-
