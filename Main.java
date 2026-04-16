@@ -1,5 +1,3 @@
-import java.util.*;
-
 public class Main {
     static UserManager userManager = new UserManager();
     static RentalManager rentalManager = new RentalManager();
@@ -24,7 +22,7 @@ public class Main {
             if (currentPage instanceof AuthPage && userInput == 1) {
                 currentUser = authPage.getCurrentUser();
                 if (currentUser instanceof Member) {
-                    currentPage = new MemberPage();
+                    currentPage = new MemberPage(boatManager, (Member) currentUser);
                 } else if (currentUser instanceof Admin) {
                     currentPage = new AdminPage();
                 }
