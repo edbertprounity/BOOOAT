@@ -4,14 +4,14 @@ import java.util.ArrayList;
 public class Member extends User {
     private List<Boat> rentalHistory;
     private List<Boat> currentRental;
-    private MemberType memberShip;
+    private MemberType membership;
     private int point;
 
     public Member(String memberName, String username, String password) {
         super(memberName, username, password);
         this.rentalHistory = new ArrayList<>();
         this.currentRental = new ArrayList<>();
-        this.memberShip = MemberType.SILVER;
+        this.membership = MemberType.SILVER;
         this.point = 0;
     }
 
@@ -35,14 +35,14 @@ public class Member extends User {
         return currentRental;
     }
 
-    public MemberType getMemberShip() {
-        return this.memberShip;
+    public MemberType getMembership() {
+        return this.membership;
     }
 
     public double discount() {
-        if (this.memberShip == MemberType.PLATINUM) {
+        if (this.membership == MemberType.PLATINUM) {
             return 0.2;
-        } else if (this.memberShip == MemberType.GOLD) {
+        } else if (this.membership == MemberType.GOLD) {
             return 0.12;
         }
 
@@ -51,11 +51,11 @@ public class Member extends User {
 
     public void confirmMembership() {
         if (this.point > 40000) {
-            this.memberShip = MemberType.PLATINUM;
+            this.membership = MemberType.PLATINUM;
         } else if (this.point > 15000) {
-            this.memberShip = MemberType.GOLD;
+            this.membership = MemberType.GOLD;
         } else {
-            this.memberShip = MemberType.SILVER;
+            this.membership = MemberType.SILVER;
         }
     }
 
@@ -65,7 +65,7 @@ public class Member extends User {
 
     @Override
     public String toString() {
-        return "Member[name=" + name + ", username=" + username + ", membership=" + memberShip + ", points=" + point
+        return "Member[name=" + name + ", username=" + username + ", membership=" + membership + ", points=" + point
                 + "]";
     }
 }
