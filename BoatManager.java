@@ -55,4 +55,14 @@ public class BoatManager {
         }
         return result;
     }
+
+    public List<Boat> findAvailableBoat() {
+        List<Boat> availableBoats = new ArrayList<>();
+        for (Boat b : this.getAllBoats()) {
+            if (b.isAvailable()) {
+                availableBoats.add(b);
+            }
+        }
+        return availableBoats;
+    }
 }

@@ -19,12 +19,77 @@ public class RentalManager {
 
         member.addRental(boat);
 
-        double price = boat.getPrice() * duration * (1 - member.discount());
+        double price = calculatePrice(boat, duration, member);
 
         RentRecord record = new RentRecord(member, boat, price);
         records.add(record);
 
-        System.out.println("Boat rented successfully.");
+        System.out.println("Boat rented successfully. Total price: $" + price);
+    }
+
+    public void rentBoat(Member member, Boat boat, int duration, String discountCode) {
+
+        if (member == null || boat == null) {
+            System.out.println("Invalid input.");
+            return;
+        }
+
+        if (!boat.isAvailable()) {
+            System.out.println("Boat already rented.");
+            return;
+        }
+
+        member.addRental(boat);
+
+        double price = calculatePrice(boat, duration, member, discountCode);
+
+        RentRecord record = new RentRecord(member, boat, price);
+        records.add(record);
+
+        System.out.println("Boat rented successfully. Total price: $" + price);
+    }
+
+    // Method overloading for price calculation
+    // Version 1: Only membership discount
+    public double calculatePrice(Boat boat, int duration, Member member) {
+        return boat.getPrice() * duration * (1 - member.discount());
+    }
+
+    // Version 2: Only discount code
+    public double calculatePrice(Boat boat, int duration, double discountCodePercentage) {
+        return boat.getPrice() * duration * (1 - discountCodePercentage);
+    }
+
+    // Version 3: Both membership and discount code
+    public double calculatePrice(Boat boat, int duration, Member member, String discountCode) {
+        double membershipDiscount = member.discount();
+        double codeDiscount = applyDiscountCode(discountCode);
+        double totalDiscount = membershipDiscount + codeDiscount;
+        
+        if (totalDiscount > 0.5) {
+            totalDiscount = 0.5; // Cap total discount at 50%
+        }
+        
+        return boat.getPrice() * duration * (1 - totalDiscount);
+    }
+
+    private double applyDiscountCode(String code) {
+        if (code == null || code.isEmpty()) {
+            return 0;
+        }
+        
+        if (code.equals("SAVE10")) {
+            return 0.10;
+        } else if (code.equals("SAVE20")) {
+            return 0.20;
+        } else if (code.equals("SUMMER")) {
+            return 0.15;
+        } else if (code.equals("WINTER")) {
+            return 0.05;
+        } else {
+            System.out.println("Invalid discount code. No discount applied.");
+            return 0;
+        }
     }
 
     public void returnBoat(Member member, Boat boat) {

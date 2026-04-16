@@ -2,10 +2,12 @@ import java.util.List;
 
 public class MemberPage implements Page {
     private BoatManager boatManager;
+    private RentalManager rentalManager;
     private Member member;
 
-    public MemberPage(BoatManager boatManager, Member member) {
+    public MemberPage(BoatManager boatManager, RentalManager rentalManager, Member member) {
         this.boatManager = boatManager;
+        this.rentalManager = rentalManager;
         this.member = member;
     }
 
@@ -17,6 +19,7 @@ public class MemberPage implements Page {
         System.out.println("3. Rent Boat");
         System.out.println("4. Return Boat");
         System.out.println("5. View My Rentals");
+        System.out.println("6. Update Profile");
         System.out.println("0. Logout");
         System.out.println("=================================");
         System.out.print("Choose: ");
@@ -34,6 +37,8 @@ public class MemberPage implements Page {
             returnMenu();
         } else if (userInput == 5) {
             viewRentalHistory();
+        } else if (userInput == 6) {
+            updateProfile();
         } else if (userInput == 0) {
             System.out.println("Logged out successfully!");
         }
@@ -134,33 +139,78 @@ public class MemberPage implements Page {
 
     public void rentMenu() {
         System.out.println("\n========== RENT BOAT ==========");
-        List<Boat> availableBoats = boatManager.getAllBoats();
+        List<Boat> availableBoats = boatManager.findAvailableBoat();
         
-        List<Boat> available = new java.util.ArrayList<>();
-        for (Boat boat : availableBoats) {
-            if (boat.isAvailable()) {
-                available.add(boat);
-            }
-        }
-        
-        if (available.isEmpty()) {
+        if (availableBoats.isEmpty()) {
             System.out.println("No boats available for rent.");
             return;
         }
         
         System.out.println("Available boats:");
-        for (int i = 0; i < available.size(); i++) {
-            System.out.println((i + 1) + ". " + available.get(i).getName() + " - Price: " + available.get(i).getPrice());
+        for (int i = 0; i < availableBoats.size(); i++) {
+            System.out.println((i + 1) + ". " + availableBoats.get(i).getName() + " - Price: $" + availableBoats.get(i).getPrice() + "/day");
         }
         System.out.println("0. Cancel");
         System.out.print("Choose boat (or 0): ");
         
         int choice = In.nextInt();
+        In.nextLine(); // Consume newline
         
-        if (choice > 0 && choice <= available.size()) {
-            Boat selectedBoat = available.get(choice - 1);
-            member.addRental(selectedBoat);
-            System.out.println("You have rented: " + selectedBoat.getName());
+        if (choice > 0 && choice <= availableBoats.size()) {
+            Boat selectedBoat = availableBoats.get(choice - 1);
+            
+            System.out.print("Enter rental duration (days): ");
+            int duration = In.nextInt();
+            In.nextLine(); // Consume newline
+            
+            if (duration <= 0) {
+                System.out.println("Invalid duration.");
+                return;
+            }
+            
+            System.out.println("\nAvailable discount codes:");
+            System.out.println("- SAVE10 (10% off)");
+            System.out.println("- SAVE20 (20% off)");
+            System.out.println("- SUMMER (15% off)");
+            System.out.println("- WINTER (5% off)");
+            
+            System.out.print("Do you have a discount code? (yes/no): ");
+            String hasCode = In.nextLine();
+            
+            String discountCode = null;
+            double finalPrice = 0;
+            
+            if (hasCode.equals("yes")) {
+                System.out.print("Enter discount code: ");
+                discountCode = In.nextLine();
+                finalPrice = rentalManager.calculatePrice(selectedBoat, duration, member, discountCode);
+            } else {
+                finalPrice = rentalManager.calculatePrice(selectedBoat, duration, member);
+            }
+            
+            System.out.println("\n========== RENTAL CONFIRMATION ==========");
+            System.out.println("Boat: " + selectedBoat.getName());
+            System.out.println("Duration: " + duration + " day(s)");
+            System.out.println("Base Price: $" + (selectedBoat.getPrice() * duration));
+            System.out.println("Membership Discount: " + (member.discount() * 100) + "%");
+            if (discountCode != null && !discountCode.isEmpty()) {
+                System.out.println("Discount Code: " + discountCode);
+            }
+            System.out.println("Final Price: $" + finalPrice);
+            System.out.println("======================================");
+            System.out.print("Proceed with rental? (y/n): ");
+            
+            String confirm = In.nextLine();
+            
+            if (confirm.equals("y")) {
+                if (discountCode != null && !discountCode.isEmpty()) {
+                    rentalManager.rentBoat(member, selectedBoat, duration, discountCode);
+                } else {
+                    rentalManager.rentBoat(member, selectedBoat, duration);
+                }
+            } else {
+                System.out.println("Rental cancelled.");
+            }
         } else if (choice == 0) {
             System.out.println("Rental cancelled.");
         } else {
@@ -188,8 +238,7 @@ public class MemberPage implements Page {
         
         if (choice > 0 && choice <= currentRentals.size()) {
             Boat boatToReturn = currentRentals.get(choice - 1);
-            member.returnBoat(boatToReturn);
-            System.out.println("You have returned: " + boatToReturn.getName());
+            rentalManager.returnBoat(member, boatToReturn);
         } else if (choice == 0) {
             System.out.println("Return cancelled.");
         } else {
@@ -223,4 +272,46 @@ public class MemberPage implements Page {
             System.out.println("No rental history.");
         }
     }
+
+    public void updateProfile() {
+        System.out.println("\n========== UPDATE PROFILE ==========");
+        System.out.println("What would you like to update?");
+        System.out.println("1. Full Name");
+        System.out.println("2. Password");
+        System.out.println("3. Both");
+        System.out.println("0. Cancel");
+        System.out.print("Choose: ");
+        
+        int choice = In.nextInt();
+        In.nextLine(); // Consume newline
+        
+        if (choice == 1) {
+            updateName();
+        } else if (choice == 2) {
+            updatePassword();
+        } else if (choice == 3) {
+            updateName();
+            updatePassword();
+        } else if (choice == 0) {
+            System.out.println("Profile update cancelled.");
+        } else {
+            System.out.println("Invalid choice.");
+        }
+    }
+
+    private void updateName() {
+        System.out.print("Enter new full name: ");
+        String newName = In.nextLine();
+        member.setName(newName);
+        System.out.println("Name updated successfully.");
+    }
+
+    private void updatePassword() {
+        System.out.print("Enter new password: ");
+        String newPassword = In.nextLine();
+        member.updatePassword(newPassword);
+        System.out.println("Password updated successfully.");
+    }
+    
+
 }

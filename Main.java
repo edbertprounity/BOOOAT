@@ -5,7 +5,7 @@ public class Main {
         UserManager userManager = new UserManager();
         RentalManager rentalManager = new RentalManager();
         BoatManager boatManager = new BoatManager();
-        
+
         AuthPage authPage = new AuthPage(userManager);
         Page currentPage = authPage;
         User currentUser = null;
@@ -26,7 +26,7 @@ public class Main {
             if (currentPage instanceof AuthPage && userInput == 1) {
                 currentUser = authPage.getCurrentUser();
                 if (currentUser instanceof Member) {
-                    currentPage = new MemberPage(boatManager, (Member) currentUser);
+                    currentPage = new MemberPage(boatManager, rentalManager, (Member) currentUser);
                 } else if (currentUser instanceof Admin) {
                     currentPage = new AdminPage();
                 }

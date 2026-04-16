@@ -58,4 +58,8 @@ public class Member extends User {
             this.memberShip = MemberType.SILVER;
         }
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 } 
