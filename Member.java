@@ -65,6 +65,7 @@ public class Member extends User {
 
     @Override
     public String toString() {
-        return "Member[name=" + name + ", username=" + username + ", membership=" + memberShip + ", points=" + point + "]";
+        return "Member[name=" + name + ", username=" + username + ", membership=" + memberShip + ", points=" + point
+                + "]";
     }
-} 
+}

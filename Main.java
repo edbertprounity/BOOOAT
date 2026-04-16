@@ -1,7 +1,7 @@
 public class Main {
-    
+
     public static void main(String[] args) {
-        
+
         UserManager userManager = new UserManager();
         RentalManager rentalManager = new RentalManager();
         BoatManager boatManager = new BoatManager();
@@ -11,8 +11,6 @@ public class Main {
         User currentUser = null;
         int userInput;
 
-    
-
         Admin myAdmin = new Admin("admin#1", "admin", "123456");
         userManager.addUser(myAdmin);
 
@@ -21,27 +19,31 @@ public class Main {
         Boat boat2 = new Boat("Fisher Pro", 100.0, BoatType.FISHING_BOAT, 6);
         Boat boat3 = new Boat("Wave Rider", 80.0, BoatType.KAYAK, 2);
         Boat boat4 = new Boat("Sailor's Dream", 200.0, BoatType.SAIL_BOAT, 8);
-        Boat boat5 = new Boat("Jet Express", 250.0, BoatType.JET_SKI, 3);
-        
+        Boat boat5 = new Boat("Jet Express 2000", 250.0, BoatType.JET_SKI, 3);
+        Boat boat6 = new Boat("Odyssey 555", 300.0, BoatType.SAIL_BOAT, 10);
+        Boat boat7 = new Boat("Vagabond", 150.0, BoatType.FISHING_BOAT, 10);
+
         boatManager.addBoat(boat1);
         boatManager.addBoat(boat2);
         boatManager.addBoat(boat3);
         boatManager.addBoat(boat4);
         boatManager.addBoat(boat5);
+        boatManager.addBoat(boat6);
+        boatManager.addBoat(boat7);
 
         // Add sample members
         Member member1 = new Member("John Doe", "john", "password123");
         Member member2 = new Member("Jane Smith", "jane", "jane2024");
-        
+
         userManager.addUser(member1);
         userManager.addUser(member2);
 
-        while (true){
+        while (true) {
             currentPage.display();
             userInput = In.nextInt();
-            
+
             currentPage.handleInput(userInput);
-            
+
             if (currentPage instanceof AuthPage && userInput == 1) {
                 currentUser = authPage.getCurrentUser();
                 if (currentUser instanceof Member) {
@@ -50,12 +52,12 @@ public class Main {
                     currentPage = new AdminPage(boatManager, rentalManager);
                 }
             }
-            
+
             if ((currentPage instanceof MemberPage || currentPage instanceof AdminPage) && userInput == 0) {
                 currentPage = authPage;
                 currentUser = null;
             }
         }
-        
+
     }
 }
