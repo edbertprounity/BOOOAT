@@ -17,11 +17,11 @@ public class Main {
         userManager.addUser(myAdmin);
 
         // Add sample boats
-        Boat boat1 = new Boat("Speedster", 150.0, BoatType.SPEED_BOAT);
-        Boat boat2 = new Boat("Fisher Pro", 100.0, BoatType.FISHING_BOAT);
-        Boat boat3 = new Boat("Wave Rider", 80.0, BoatType.KAYAK);
-        Boat boat4 = new Boat("Sailor's Dream", 200.0, BoatType.SAIL_BOAT);
-        Boat boat5 = new Boat("Jet Express", 250.0, BoatType.JET_SKI);
+        Boat boat1 = new Boat("Speedster", 150.0, BoatType.SPEED_BOAT, 4);
+        Boat boat2 = new Boat("Fisher Pro", 100.0, BoatType.FISHING_BOAT, 6);
+        Boat boat3 = new Boat("Wave Rider", 80.0, BoatType.KAYAK, 2);
+        Boat boat4 = new Boat("Sailor's Dream", 200.0, BoatType.SAIL_BOAT, 8);
+        Boat boat5 = new Boat("Jet Express", 250.0, BoatType.JET_SKI, 3);
         
         boatManager.addBoat(boat1);
         boatManager.addBoat(boat2);
@@ -42,17 +42,15 @@ public class Main {
             
             currentPage.handleInput(userInput);
             
-            // Check if user logged in
             if (currentPage instanceof AuthPage && userInput == 1) {
                 currentUser = authPage.getCurrentUser();
                 if (currentUser instanceof Member) {
                     currentPage = new MemberPage(boatManager, rentalManager, (Member) currentUser);
                 } else if (currentUser instanceof Admin) {
-                    currentPage = new AdminPage();
+                    currentPage = new AdminPage(boatManager, rentalManager);
                 }
             }
             
-            // Check if user logged out
             if ((currentPage instanceof MemberPage || currentPage instanceof AdminPage) && userInput == 0) {
                 currentPage = authPage;
                 currentUser = null;

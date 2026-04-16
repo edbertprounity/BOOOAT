@@ -5,11 +5,12 @@ public class Boat {
     private int capacity;
     private final BoatType BOAT_TYPE;
 
-    public Boat(String boatName, double price, BoatType boatType){
+    public Boat(String boatName, double price, BoatType boatType, int capacity){
         this.boatName = boatName;
         this.price = price;
         this.availability = true;
         this.BOAT_TYPE = boatType;
+        this.capacity = capacity;
     }
 
     String getName(){
@@ -38,7 +39,11 @@ public class Boat {
 
     @Override
     public String toString(){
-        return "Boat Details: \nBoat Name: " + this.boatName + " (" + this.BOAT_TYPE + ")";
+        return "Boat Details: \n  Name: " + this.boatName + 
+               "\n  Type: " + this.BOAT_TYPE + 
+               "\n  Price: $" + this.price + "/day" +
+               "\n  Capacity: " + this.capacity + " persons" +
+               "\n  Status: " + (this.availability ? "Available" : "Not Available");
     }
 }
 

@@ -25,7 +25,7 @@ public class BoatManager {
         return null;
     }
 
-    public List<Boat> search(String keyword, Integer minCapacity, Integer maxCapacity, BoatType type) {
+    public List<Boat> search(String keyword, Integer minCapacity, Integer maxCapacity, BoatType type, Double minPrice, Double maxPrice) {
 
         List<Boat> result = new ArrayList<>();
 
@@ -48,6 +48,14 @@ public class BoatManager {
             }
 
             if (type != null && b.getType() != type) {
+                continue;
+            }
+
+            if (minPrice != null && b.getPrice() < minPrice) {
+                continue;
+            }
+
+            if (maxPrice != null && b.getPrice() > maxPrice) {
                 continue;
             }
 

@@ -57,8 +57,7 @@ public class MemberPage implements Page {
         for (Boat boat : boats) {
             if (boat.isAvailable()) {
                 System.out.println(boat);
-                System.out.println("Price: " + boat.getPrice());
-                System.out.println("---");
+                System.out.println();
                 hasAvailable = true;
             }
         }
@@ -75,6 +74,8 @@ public class MemberPage implements Page {
         Integer minCapacity = null;
         Integer maxCapacity = null;
         BoatType type = null;
+        Double minPrice = null;
+        Double maxPrice = null;
         
         System.out.println("Enter search filters (press Enter to skip strings, 0 to skip numbers):");
         
@@ -94,6 +95,18 @@ public class MemberPage implements Page {
         int maxCap = In.nextInt();
         if (maxCap != 0) {
             maxCapacity = maxCap;
+        }
+        
+        System.out.print("Minimum price (or 0): ");
+        double minPr = In.nextDouble();
+        if (minPr != 0) {
+            minPrice = minPr;
+        }
+        
+        System.out.print("Maximum price (or 0): ");
+        double maxPr = In.nextDouble();
+        if (maxPr != 0) {
+            maxPrice = maxPr;
         }
         
         System.out.println("Boat types:");
@@ -119,7 +132,7 @@ public class MemberPage implements Page {
             type = BoatType.JET_SKI;
         }
         
-        List<Boat> results = boatManager.search(nameKeyword, minCapacity, maxCapacity, type);
+        List<Boat> results = boatManager.search(nameKeyword, minCapacity, maxCapacity, type, minPrice, maxPrice);
         displaySearchResults(results);
     }
 
@@ -132,8 +145,7 @@ public class MemberPage implements Page {
         System.out.println("\n========== SEARCH RESULTS ==========");
         for (Boat boat : boats) {
             System.out.println(boat);
-            System.out.println("Price: " + boat.getPrice());
-            System.out.println("---");
+            System.out.println();
         }
     }
 
@@ -148,7 +160,7 @@ public class MemberPage implements Page {
         
         System.out.println("Available boats:");
         for (int i = 0; i < availableBoats.size(); i++) {
-            System.out.println((i + 1) + ". " + availableBoats.get(i).getName() + " - Price: $" + availableBoats.get(i).getPrice() + "/day");
+            System.out.println((i + 1) + ". " + availableBoats.get(i).getName() + " - $" + availableBoats.get(i).getPrice() + "/day - Capacity: " + availableBoats.get(i).getCapacity());
         }
         System.out.println("0. Cancel");
         System.out.print("Choose boat (or 0): ");

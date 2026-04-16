@@ -20,6 +20,10 @@ public class RentRecord {
         return boat;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
     public boolean isActive() {
         return isActive;
     }
