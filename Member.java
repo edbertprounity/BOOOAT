@@ -62,13 +62,9 @@ public class Member extends User {
     public void setName(String name) {
         this.name = name;
     }
-<<<<<<< HEAD
 
     @Override
     public String toString() {
         return "Member[name=" + name + ", username=" + username + ", membership=" + memberShip + ", points=" + point + "]";
     }
 } 
-=======
-}
->>>>>>> 1e62c708298f94d6cb6e20464f90b4547dc89ac3
