@@ -16,6 +16,26 @@ public class Main {
         Admin myAdmin = new Admin("admin#1", "admin", "123456");
         userManager.addUser(myAdmin);
 
+        // Add sample boats
+        Boat boat1 = new Boat("Speedster", 150.0, BoatType.SPEED_BOAT);
+        Boat boat2 = new Boat("Fisher Pro", 100.0, BoatType.FISHING_BOAT);
+        Boat boat3 = new Boat("Wave Rider", 80.0, BoatType.KAYAK);
+        Boat boat4 = new Boat("Sailor's Dream", 200.0, BoatType.SAIL_BOAT);
+        Boat boat5 = new Boat("Jet Express", 250.0, BoatType.JET_SKI);
+        
+        boatManager.addBoat(boat1);
+        boatManager.addBoat(boat2);
+        boatManager.addBoat(boat3);
+        boatManager.addBoat(boat4);
+        boatManager.addBoat(boat5);
+
+        // Add sample members
+        Member member1 = new Member("John Doe", "john", "password123");
+        Member member2 = new Member("Jane Smith", "jane", "jane2024");
+        
+        userManager.addUser(member1);
+        userManager.addUser(member2);
+
         while (true){
             currentPage.display();
             userInput = In.nextInt();
