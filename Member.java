@@ -35,26 +35,26 @@ public class Member extends User {
         return currentRental;
     }
 
-    public MemberType getMemberShip(){
+    public MemberType getMemberShip() {
         return this.memberShip;
     }
 
-    public double discount(){
-        if(this.memberShip == MemberType.PLATINUM){
+    public double discount() {
+        if (this.memberShip == MemberType.PLATINUM) {
             return 0.2;
-        }else if (this.memberShip == MemberType.GOLD){
+        } else if (this.memberShip == MemberType.GOLD) {
             return 0.12;
-        } 
+        }
 
         return 0;
     }
 
-    public void confirmMemberShip(){
-        if (this.point > 40000){
+    public void confirmMembership() {
+        if (this.point > 40000) {
             this.memberShip = MemberType.PLATINUM;
-        }else if (this.point > 15000){
+        } else if (this.point > 15000) {
             this.memberShip = MemberType.GOLD;
-        }else {
+        } else {
             this.memberShip = MemberType.SILVER;
         }
     }
@@ -62,9 +62,13 @@ public class Member extends User {
     public void setName(String name) {
         this.name = name;
     }
+<<<<<<< HEAD
 
     @Override
     public String toString() {
         return "Member[name=" + name + ", username=" + username + ", membership=" + memberShip + ", points=" + point + "]";
     }
 } 
+=======
+}
+>>>>>>> 1e62c708298f94d6cb6e20464f90b4547dc89ac3
