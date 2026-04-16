@@ -3,13 +3,13 @@ public class RentRecord {
     private Member member;
     private Boat boat;
     private double price;
-    private boolean active;
+    private boolean isActive;
 
     public RentRecord(Member member, Boat boat, double price) {
         this.member = member;
         this.boat = boat;
         this.price = price;
-        this.active = true;
+        this.isActive = true;
     }
 
     public Member getMember() {
@@ -21,15 +21,16 @@ public class RentRecord {
     }
 
     public boolean isActive() {
-        return active;
+        return isActive;
     }
 
     public void close() {
-        this.active = false;
+        this.isActive = false;
+        this.member.returnBoat(this.boat);
     }
 
     @Override
     public String toString() {
-        return "Member: " + member.getUsername() + " \nBoat: " + boat.getName() +" \nPrice: " + price +"\nActive: " + active;
+        return "Member: " + member.getUsername() + " \nBoat: " + boat.getName() +" \nPrice: " + price +"\nActive: " + isActive;
     }
 }

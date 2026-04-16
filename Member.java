@@ -17,19 +17,22 @@ public class Member extends User {
 
     public void addRental(Boat boat) {
         currentRental.add(boat);
+        this.point += 3000;
+        boat.setAvailability(false);
     }
 
     public void returnBoat(Boat boat) {
         currentRental.remove(boat);
         rentalHistory.add(boat);
+        boat.setAvailability(true);
     }
 
-    public String getRentalHistory() {
-        return getListItem(rentalHistory);
+    public List<Boat> getRentalHistory() {
+        return rentalHistory;
     }
 
-    public String getCurrentRental() {
-        return getListItem(currentRental);
+    public List<Boat> getCurrentRental() {
+        return currentRental;
     }
 
     public MemberType getMemberShip(){

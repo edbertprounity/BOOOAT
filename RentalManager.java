@@ -3,9 +3,9 @@ import java.util.List;
 
 public class RentalManager {
 
-    private static List<RentRecord> records = new ArrayList<>();
+    private List<RentRecord> records = new ArrayList<>();
 
-    public static void rentBoat(Member member, Boat boat, int duration) {
+    public void rentBoat(Member member, Boat boat, int duration) {
 
         if (member == null || boat == null) {
             System.out.println("Invalid input.");
@@ -18,7 +18,6 @@ public class RentalManager {
         }
 
         member.addRental(boat);
-        boat.setAvailability(false);
 
         double price = boat.getPrice() * duration * (1 - member.discount());
 
@@ -28,17 +27,12 @@ public class RentalManager {
         System.out.println("Boat rented successfully.");
     }
 
-    public static void returnBoat(Member member, Boat boat) {
+    public void returnBoat(Member member, Boat boat) {
 
         for (RentRecord r : records) {
 
-            if (r.getMember() == member &&
-                r.getBoat() == boat &&
-                r.isActive()) {
-
+            if (r.getMember() == member && r.getBoat() == boat && r.isActive()) {
                 r.close();
-                member.returnBoat(boat);
-
                 System.out.println("Boat returned successfully.");
                 return;
             }
@@ -47,11 +41,11 @@ public class RentalManager {
         System.out.println("No active rental found.");
     }
 
-    public static List<RentRecord> getAllRecords() {
+    public List<RentRecord> getAllRecords() {
         return records;
     }
 
-    public static List<RentRecord> getActiveRecords() {
+    public List<RentRecord> getActiveRecords() {
 
         List<RentRecord> result = new ArrayList<>();
 
@@ -62,7 +56,5 @@ public class RentalManager {
         }
 
         return result;
-    }
-
-    
+    }    
 }

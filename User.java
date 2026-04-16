@@ -1,5 +1,3 @@
-import java.util.List;
-
 public abstract class User {
     protected String username;
     protected String password;
@@ -18,12 +16,8 @@ public abstract class User {
     public String getUsername() {
         return username;
     }
-
-    protected String getListItem(List<?> list) {
-        String items = "";
-        for (int i = 1; i <= list.size(); i++) {
-            items = items + "\n" + i + ". " + list.get(i - 1);
-        }
-        return items;
+    
+    public String getPassword() {
+        return password;
     }
 }

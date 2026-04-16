@@ -4,11 +4,11 @@ public class Admin extends User {
         super(adminName, username, password);
     }
 
-    public void addBoat(Boat boat) {
-        BoatManager.addBoat(boat);;
+    public void addBoat(BoatManager manager, Boat boat) {
+        manager.addBoat(boat);;
     }
 
-    public void removeBoat(Boat boat) {
-        BoatManager.removeBoat(boat);
+    public void removeBoat(BoatManager manager, Boat boat) {
+        manager.removeBoat(boat);
     }
 }

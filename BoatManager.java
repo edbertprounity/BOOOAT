@@ -2,21 +2,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoatManager {
-    private static List<Boat> boats = new ArrayList<>();
+    private List<Boat> boats = new ArrayList<>();
 
-    public static void addBoat(Boat boat) {
+    public void addBoat(Boat boat) {
         boats.add(boat);
     }
 
-    public static void removeBoat(Boat boat){
+    public void removeBoat(Boat boat){
         boats.remove(boat);
     }
 
-    public static List<Boat> getAllBoats() {
+    public List<Boat> getAllBoats() {
         return boats;
     }
 
-    public static Boat findByName(String name) {
+    public Boat findByName(String name) {
         for (Boat b : boats) {
             if (b.getName().equals(name)) {
                 return b;
@@ -25,11 +25,11 @@ public class BoatManager {
         return null;
     }
 
-    public static List<Boat> search(String keyword, Integer minCapacity, Integer maxCapacity, BoatType type) {
+    public List<Boat> search(String keyword, Integer minCapacity, Integer maxCapacity, BoatType type) {
 
         List<Boat> result = new ArrayList<>();
 
-        for (Boat b : BoatManager.getAllBoats()) {
+        for (Boat b : this.getAllBoats()) {
 
             if (!b.isAvailable()){
                 continue;
