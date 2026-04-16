@@ -43,7 +43,7 @@ public class MemberPage implements Page {
         System.out.println("\n========== AVAILABLE BOATS ==========");
         List<Boat> boats = boatManager.getAllBoats();
         
-        if (boats.size() == 0) {
+        if (boats.isEmpty()) {
             System.out.println("No boats available.");
             return;
         }
@@ -71,11 +71,11 @@ public class MemberPage implements Page {
         Integer maxCapacity = null;
         BoatType type = null;
         
-        System.out.println("Enter search filters (enter - to skip strings, 0 to skip numbers):");
+        System.out.println("Enter search filters (press Enter to skip strings, 0 to skip numbers):");
         
-        System.out.print("Boat name (or -): ");
+        System.out.print("Boat name (or press Enter to skip): ");
         String name = In.nextLine();
-        if (!name.equals("-")) {
+        if (!name.isEmpty()) {
             nameKeyword = name;
         }
         
@@ -119,7 +119,7 @@ public class MemberPage implements Page {
     }
 
     private void displaySearchResults(List<Boat> boats) {
-        if (boats.size() == 0) {
+        if (boats.isEmpty()) {
             System.out.println("No boats found matching your criteria.");
             return;
         }
@@ -143,7 +143,7 @@ public class MemberPage implements Page {
             }
         }
         
-        if (available.size() == 0) {
+        if (available.isEmpty()) {
             System.out.println("No boats available for rent.");
             return;
         }
@@ -172,7 +172,7 @@ public class MemberPage implements Page {
         System.out.println("\n========== RETURN BOAT ==========");
         List<Boat> currentRentals = member.getCurrentRental();
         
-        if (currentRentals.size() == 0) {
+        if (currentRentals.isEmpty()) {
             System.out.println("You have no active rentals.");
             return;
         }
@@ -203,7 +203,7 @@ public class MemberPage implements Page {
         List<Boat> currentRentals = member.getCurrentRental();
         List<Boat> rentalHistory = member.getRentalHistory();
         
-        if (currentRentals.size() > 0) {
+        if (!currentRentals.isEmpty()) {
             System.out.println("Current Active Rentals:");
             for (Boat boat : currentRentals) {
                 System.out.println("- " + boat.getName());
@@ -214,7 +214,7 @@ public class MemberPage implements Page {
         
         System.out.println();
         
-        if (rentalHistory.size() > 0) {
+        if (!rentalHistory.isEmpty()) {
             System.out.println("Rental History:");
             for (Boat boat : rentalHistory) {
                 System.out.println("- " + boat.getName());

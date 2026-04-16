@@ -1,13 +1,17 @@
 public class Main {
-    static UserManager userManager = new UserManager();
-    static RentalManager rentalManager = new RentalManager();
-    static BoatManager boatManager = new BoatManager();
     
     public static void main(String[] args) {
+        
+        UserManager userManager = new UserManager();
+        RentalManager rentalManager = new RentalManager();
+        BoatManager boatManager = new BoatManager();
+        
         AuthPage authPage = new AuthPage(userManager);
         Page currentPage = authPage;
         User currentUser = null;
         int userInput;
+
+    
 
         Admin myAdmin = new Admin("admin#1", "admin", "123456");
         userManager.addUser(myAdmin);
