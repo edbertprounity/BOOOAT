@@ -21,7 +21,7 @@ public class Main {
         Boat boat4 = new Boat("Sailor's Dream", 200.0, BoatType.SAIL_BOAT, 8);
         Boat boat5 = new Boat("Jet Express 2000", 250.0, BoatType.JET_SKI, 3);
         Boat boat6 = new Boat("Odyssey 555", 300.0, BoatType.SAIL_BOAT, 10);
-        Boat boat7 = new Boat("Vagabond", 150.0, BoatType.FISHING_BOAT, 10);
+        Boat boat7 = new Boat("Vagabond", 150.0, BoatType.FISHING_BOAT, 8);
 
         boatManager.addBoat(boat1);
         boatManager.addBoat(boat2);

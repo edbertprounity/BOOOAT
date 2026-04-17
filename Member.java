@@ -39,6 +39,10 @@ public class Member extends User {
         return this.membership;
     }
 
+    public int getPoint() {
+        return this.point;
+    }
+
     public double discount() {
         if (this.membership == MemberType.PLATINUM) {
             return 0.2;

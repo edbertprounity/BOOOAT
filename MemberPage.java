@@ -20,6 +20,7 @@ public class MemberPage implements Page {
         System.out.println("4. Return Boat");
         System.out.println("5. View My Rentals");
         System.out.println("6. Update Profile");
+        System.out.println("7. View Profile");
         System.out.println("0. Logout");
         System.out.println("=================================");
         System.out.print("Choose: ");
@@ -39,6 +40,8 @@ public class MemberPage implements Page {
             viewRentalHistory();
         } else if (userInput == 6) {
             updateProfile();
+        } else if (userInput == 7) {
+            viewProfile();
         } else if (userInput == 0) {
             System.out.println("Logged out successfully!");
         }
@@ -47,12 +50,12 @@ public class MemberPage implements Page {
     public void viewAllBoats() {
         System.out.println("\n========== AVAILABLE BOATS ==========");
         List<Boat> boats = boatManager.getAllBoats();
-        
+
         if (boats.isEmpty()) {
             System.out.println("No boats available.");
             return;
         }
-        
+
         boolean hasAvailable = false;
         for (Boat boat : boats) {
             if (boat.isAvailable()) {
@@ -61,7 +64,7 @@ public class MemberPage implements Page {
                 hasAvailable = true;
             }
         }
-        
+
         if (!hasAvailable) {
             System.out.println("No boats available at the moment.");
         }
@@ -69,46 +72,46 @@ public class MemberPage implements Page {
 
     public void searchBoat() {
         System.out.println("\n========== SEARCH BOATS ==========");
-        
+
         String nameKeyword = null;
         Integer minCapacity = null;
         Integer maxCapacity = null;
         BoatType type = null;
         Double minPrice = null;
         Double maxPrice = null;
-        
+
         System.out.println("Enter search filters (press Enter to skip strings, 0 to skip numbers):");
-        
+
         System.out.print("Boat name (or press Enter to skip): ");
         String name = In.nextLine();
         if (!name.isEmpty()) {
             nameKeyword = name;
         }
-        
+
         System.out.print("Minimum capacity (or 0): ");
         int minCap = In.nextInt();
         if (minCap != 0) {
             minCapacity = minCap;
         }
-        
+
         System.out.print("Maximum capacity (or 0): ");
         int maxCap = In.nextInt();
         if (maxCap != 0) {
             maxCapacity = maxCap;
         }
-        
+
         System.out.print("Minimum price (or 0): ");
         double minPr = In.nextDouble();
         if (minPr != 0) {
             minPrice = minPr;
         }
-        
+
         System.out.print("Maximum price (or 0): ");
         double maxPr = In.nextDouble();
         if (maxPr != 0) {
             maxPrice = maxPr;
         }
-        
+
         System.out.println("Boat types:");
         System.out.println("1. SPEED_BOAT");
         System.out.println("2. FISHING_BOAT");
@@ -117,9 +120,9 @@ public class MemberPage implements Page {
         System.out.println("5. JET_SKI");
         System.out.println("0. Skip boat type filter");
         System.out.print("Choose boat type (or 0): ");
-        
+
         int typeChoice = In.nextInt();
-        
+
         if (typeChoice == 1) {
             type = BoatType.SPEED_BOAT;
         } else if (typeChoice == 2) {
@@ -131,7 +134,7 @@ public class MemberPage implements Page {
         } else if (typeChoice == 5) {
             type = BoatType.JET_SKI;
         }
-        
+
         List<Boat> results = boatManager.search(nameKeyword, minCapacity, maxCapacity, type, minPrice, maxPrice);
         displaySearchResults(results);
     }
@@ -141,7 +144,7 @@ public class MemberPage implements Page {
             System.out.println("No boats found matching your criteria.");
             return;
         }
-        
+
         System.out.println("\n========== SEARCH RESULTS ==========");
         for (Boat boat : boats) {
             System.out.println(boat);
@@ -152,46 +155,47 @@ public class MemberPage implements Page {
     public void rentMenu() {
         System.out.println("\n========== RENT BOAT ==========");
         List<Boat> availableBoats = boatManager.findAvailableBoat();
-        
+
         if (availableBoats.isEmpty()) {
             System.out.println("No boats available for rent.");
             return;
         }
-        
+
         System.out.println("Available boats:");
         for (int i = 0; i < availableBoats.size(); i++) {
-            System.out.println((i + 1) + ". " + availableBoats.get(i).getName() + " - $" + availableBoats.get(i).getPrice() + "/day - Capacity: " + availableBoats.get(i).getCapacity());
+            System.out.println((i + 1) + ". " + availableBoats.get(i).getName() + " - $"
+                    + availableBoats.get(i).getPrice() + "/day - Capacity: " + availableBoats.get(i).getCapacity());
         }
         System.out.println("0. Cancel");
         System.out.print("Choose boat (or 0): ");
-        
+
         int choice = In.nextInt();
         In.nextLine(); // Consume newline
-        
+
         if (choice > 0 && choice <= availableBoats.size()) {
             Boat selectedBoat = availableBoats.get(choice - 1);
-            
+
             System.out.print("Enter rental duration (days): ");
             int duration = In.nextInt();
             In.nextLine(); // Consume newline
-            
+
             if (duration <= 0) {
                 System.out.println("Invalid duration.");
                 return;
             }
-            
+
             System.out.println("\nAvailable discount codes:");
             System.out.println("- SAVE10 (10% off)");
             System.out.println("- SAVE20 (20% off)");
             System.out.println("- SUMMER (15% off)");
             System.out.println("- WINTER (5% off)");
-            
+
             System.out.print("Do you have a discount code? (yes/no): ");
             String hasCode = In.nextLine();
-            
+
             String discountCode = null;
             double finalPrice = 0;
-            
+
             if (hasCode.equals("yes")) {
                 System.out.print("Enter discount code: ");
                 discountCode = In.nextLine();
@@ -199,7 +203,7 @@ public class MemberPage implements Page {
             } else {
                 finalPrice = rentalManager.calculatePrice(selectedBoat, duration, member);
             }
-            
+
             System.out.println("\n========== RENTAL CONFIRMATION ==========");
             System.out.println("Boat: " + selectedBoat.getName());
             System.out.println("Duration: " + duration + " day(s)");
@@ -211,14 +215,16 @@ public class MemberPage implements Page {
             System.out.println("Final Price: $" + finalPrice);
             System.out.println("======================================");
             System.out.print("Proceed with rental? (y/n): ");
-            
+
             String confirm = In.nextLine();
-            
+
             if (confirm.equals("y")) {
                 if (discountCode != null && !discountCode.isEmpty()) {
                     rentalManager.rentBoat(member, selectedBoat, duration, discountCode);
+                    this.member.confirmMembership();
                 } else {
                     rentalManager.rentBoat(member, selectedBoat, duration);
+                    this.member.confirmMembership();
                 }
             } else {
                 System.out.println("Rental cancelled.");
@@ -233,21 +239,21 @@ public class MemberPage implements Page {
     public void returnMenu() {
         System.out.println("\n========== RETURN BOAT ==========");
         List<Boat> currentRentals = member.getCurrentRental();
-        
+
         if (currentRentals.isEmpty()) {
             System.out.println("You have no active rentals.");
             return;
         }
-        
+
         System.out.println("Your active rentals:");
         for (int i = 0; i < currentRentals.size(); i++) {
             System.out.println((i + 1) + ". " + currentRentals.get(i).getName());
         }
         System.out.println("0. Cancel");
         System.out.print("Choose boat to return (or 0): ");
-        
+
         int choice = In.nextInt();
-        
+
         if (choice > 0 && choice <= currentRentals.size()) {
             Boat boatToReturn = currentRentals.get(choice - 1);
             rentalManager.returnBoat(member, boatToReturn);
@@ -257,13 +263,13 @@ public class MemberPage implements Page {
             System.out.println("Invalid choice.");
         }
     }
-    
+
     public void viewRentalHistory() {
         System.out.println("\n========== MY RENTALS ==========");
-        
+
         List<Boat> currentRentals = member.getCurrentRental();
         List<Boat> rentalHistory = member.getRentalHistory();
-        
+
         if (!currentRentals.isEmpty()) {
             System.out.println("Current Active Rentals:");
             for (Boat boat : currentRentals) {
@@ -272,9 +278,9 @@ public class MemberPage implements Page {
         } else {
             System.out.println("No active rentals.");
         }
-        
+
         System.out.println();
-        
+
         if (!rentalHistory.isEmpty()) {
             System.out.println("Rental History:");
             for (Boat boat : rentalHistory) {
@@ -293,10 +299,10 @@ public class MemberPage implements Page {
         System.out.println("3. Both");
         System.out.println("0. Cancel");
         System.out.print("Choose: ");
-        
+
         int choice = In.nextInt();
         In.nextLine(); // Consume newline
-        
+
         if (choice == 1) {
             updateName();
         } else if (choice == 2) {
@@ -324,6 +330,13 @@ public class MemberPage implements Page {
         member.updatePassword(newPassword);
         System.out.println("Password updated successfully.");
     }
-    
+
+    public void viewProfile() {
+        System.out.println("\n======== PROFILE DETAILS ========");
+        System.out.println("Name: " + this.member.getName());
+        System.out.println("Username: " + this.member.getUsername());
+        System.out.println("Membership: " + this.member.getMembership());
+        System.out.println("Membership Point: " + this.member.getPoint());
+    }
 
 }
