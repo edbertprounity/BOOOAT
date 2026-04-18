@@ -43,6 +43,7 @@ public class AuthPage implements Page {
             return user;
         } else {
             System.out.println("Invalid username or password!");
+            this.currentUser = null;
             return null;
         }
     }
