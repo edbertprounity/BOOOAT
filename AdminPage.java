@@ -41,16 +41,16 @@ public class AdminPage implements Page {
 
     public void addBoatMenu() {
         System.out.println("\n========== ADD BOAT ==========");
-        
+
         System.out.print("Boat name: ");
         String name = In.nextLine();
-        
+
         System.out.print("Boat price per day: ");
         double price = In.nextDouble();
-        
+
         System.out.print("Boat capacity (number of persons): ");
         int capacity = In.nextInt();
-        
+
         System.out.println("Boat types:");
         System.out.println("1. SPEED_BOAT");
         System.out.println("2. FISHING_BOAT");
@@ -58,10 +58,10 @@ public class AdminPage implements Page {
         System.out.println("4. SAIL_BOAT");
         System.out.println("5. JET_SKI");
         System.out.print("Choose boat type: ");
-        
+
         int typeChoice = In.nextInt();
         BoatType type = null;
-        
+
         if (typeChoice == 1) {
             type = BoatType.SPEED_BOAT;
         } else if (typeChoice == 2) {
@@ -76,7 +76,7 @@ public class AdminPage implements Page {
             System.out.println("Invalid boat type.");
             return;
         }
-        
+
         Boat newBoat = new Boat(name, price, type, capacity);
         boatManager.addBoat(newBoat);
         System.out.println("Boat added successfully!");
@@ -84,32 +84,33 @@ public class AdminPage implements Page {
 
     public void removeBoatMenu() {
         System.out.println("\n========== REMOVE BOAT ==========");
-        
+
         List<Boat> boats = boatManager.getAllBoats();
-        
+
         if (boats.isEmpty()) {
             System.out.println("No boats available.");
             return;
         }
-        
+
         System.out.println("Available boats:");
         for (int i = 0; i < boats.size(); i++) {
-            System.out.println((i + 1) + ". " + boats.get(i).getName() + " - $" + boats.get(i).getPrice() + "/day - Capacity: " + boats.get(i).getCapacity());
+            System.out.println((i + 1) + ". " + boats.get(i).getName() + " - $" + boats.get(i).getPrice()
+                    + "/day - Capacity: " + boats.get(i).getCapacity());
         }
         System.out.println("0. Cancel");
         System.out.print("Choose boat to remove (or 0): ");
-        
+
         int choice = In.nextInt();
-        
+
         if (choice > 0 && choice <= boats.size()) {
             Boat boatToRemove = boats.get(choice - 1);
-            
+
             // Check if boat has active rentals
             if (hasActiveRentals(boatToRemove)) {
                 System.out.println("Cannot remove boat! This boat has active rentals.");
                 return;
             }
-            
+
             boatManager.removeBoat(boatToRemove);
             System.out.println("Boat removed successfully!");
         } else if (choice == 0) {
@@ -118,7 +119,7 @@ public class AdminPage implements Page {
             System.out.println("Invalid choice.");
         }
     }
-    
+
     private boolean hasActiveRentals(Boat boat) {
         List<RentRecord> records = rentalManager.getAllRecords();
         for (RentRecord record : records) {
@@ -132,12 +133,12 @@ public class AdminPage implements Page {
     public void viewAllBoats() {
         System.out.println("\n========== ALL BOATS ==========");
         List<Boat> boats = boatManager.getAllBoats();
-        
+
         if (boats.isEmpty()) {
             System.out.println("No boats in the system.");
             return;
         }
-        
+
         for (Boat boat : boats) {
             System.out.println(boat);
             System.out.println();
@@ -151,9 +152,9 @@ public class AdminPage implements Page {
         System.out.println("3. All Rentals");
         System.out.println("0. Cancel");
         System.out.print("Choose: ");
-        
+
         int choice = In.nextInt();
-        
+
         if (choice == 1) {
             displayActiveRentals();
         } else if (choice == 2) {
@@ -170,7 +171,7 @@ public class AdminPage implements Page {
     private void displayActiveRentals() {
         System.out.println("\n========== ACTIVE RENTALS ==========");
         List<RentRecord> records = rentalManager.getAllRecords();
-        
+
         int count = 0;
         for (RentRecord record : records) {
             if (record.isActive()) {
@@ -179,7 +180,7 @@ public class AdminPage implements Page {
                 count++;
             }
         }
-        
+
         if (count == 0) {
             System.out.println("No active rentals.");
         }
@@ -188,7 +189,7 @@ public class AdminPage implements Page {
     private void displayCompletedRentals() {
         System.out.println("\n========== COMPLETED RENTALS ==========");
         List<RentRecord> records = rentalManager.getAllRecords();
-        
+
         int count = 0;
         for (RentRecord record : records) {
             if (!record.isActive()) {
@@ -197,7 +198,7 @@ public class AdminPage implements Page {
                 count++;
             }
         }
-        
+
         if (count == 0) {
             System.out.println("No completed rentals.");
         }
@@ -206,12 +207,12 @@ public class AdminPage implements Page {
     private void displayAllRentals() {
         System.out.println("\n========== ALL RENTALS ==========");
         List<RentRecord> records = rentalManager.getAllRecords();
-        
+
         if (records.isEmpty()) {
             System.out.println("No rental records.");
             return;
         }
-        
+
         for (RentRecord record : records) {
             System.out.println(record);
             System.out.println("---");
@@ -221,17 +222,17 @@ public class AdminPage implements Page {
     public void viewSalesReport() {
         System.out.println("\n========== SALES REPORT ==========");
         List<RentRecord> records = rentalManager.getAllRecords();
-        
+
         if (records.isEmpty()) {
             System.out.println("No sales data available.");
             return;
         }
-        
+
         double totalRevenue = 0;
         int totalRentals = records.size();
         int activeRentals = 0;
         int completedRentals = 0;
-        
+
         for (RentRecord record : records) {
             totalRevenue += record.getPrice();
             if (record.isActive()) {
@@ -240,7 +241,7 @@ public class AdminPage implements Page {
                 completedRentals++;
             }
         }
-        
+
         System.out.println("Total Rentals: " + totalRentals);
         System.out.println("Active Rentals: " + activeRentals);
         System.out.println("Completed Rentals: " + completedRentals);
