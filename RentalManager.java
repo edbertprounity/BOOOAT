@@ -55,12 +55,7 @@ public class RentalManager {
         return boat.getPrice() * duration * (1 - member.discount());
     }
 
-    // Version 2: Only discount code
-    public double calculatePrice(Boat boat, int duration, double discountCodePercentage) {
-        return boat.getPrice() * duration * (1 - discountCodePercentage);
-    }
-
-    // Version 3: Both membership and discount code
+    // Version 2: Both membership and discount code
     public double calculatePrice(Boat boat, int duration, Member member, String discountCode) {
         double membershipDiscount = member.discount();
         double codeDiscount = applyDiscountCode(discountCode);
