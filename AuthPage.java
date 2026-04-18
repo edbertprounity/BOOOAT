@@ -24,7 +24,6 @@ public class AuthPage implements Page {
             register();
         } else if (userInput == 0) {
             System.out.println("Exiting system...");
-            System.exit(0);
         }
     }
 

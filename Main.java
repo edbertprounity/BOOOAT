@@ -57,6 +57,10 @@ public class Main {
                 currentPage = authPage;
                 currentUser = null;
             }
+
+            if (currentPage instanceof AuthPage && userInput == 0) {
+                break;
+            }
         }
 
     }
