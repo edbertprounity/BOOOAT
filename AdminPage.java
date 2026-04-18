@@ -47,11 +47,9 @@ public class AdminPage implements Page {
         
         System.out.print("Boat price per day: ");
         double price = In.nextDouble();
-        In.nextLine(); // Consume newline
         
         System.out.print("Boat capacity (number of persons): ");
         int capacity = In.nextInt();
-        In.nextLine(); // Consume newline
         
         System.out.println("Boat types:");
         System.out.println("1. SPEED_BOAT");

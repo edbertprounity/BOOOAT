@@ -170,14 +170,12 @@ public class MemberPage implements Page {
         System.out.print("Choose boat (or 0): ");
 
         int choice = In.nextInt();
-        In.nextLine(); // Consume newline
 
         if (choice > 0 && choice <= availableBoats.size()) {
             Boat selectedBoat = availableBoats.get(choice - 1);
 
             System.out.print("Enter rental duration (days): ");
             int duration = In.nextInt();
-            In.nextLine(); // Consume newline
 
             if (duration <= 0) {
                 System.out.println("Invalid duration.");
@@ -301,7 +299,6 @@ public class MemberPage implements Page {
         System.out.print("Choose: ");
 
         int choice = In.nextInt();
-        In.nextLine(); // Consume newline
 
         if (choice == 1) {
             updateName();
