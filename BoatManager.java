@@ -6,6 +6,11 @@ import java.util.List;
 public class BoatManager {
     private List<Boat> boats = new ArrayList<>();
 
+    public static final Comparator<Boat> PRICE_COMPARATOR = Comparator.comparing(Boat::getPrice);
+    public static final Comparator<Boat> CAPACITY_COMPARATOR = Comparator.comparing(Boat::getCapacity);
+    public static final Comparator<Boat> TYPE_COMPARATOR = Comparator.comparing(BoatManager::getBoatTypeName);
+    public static final Comparator<Boat> NAME_COMPARATOR = Comparator.comparing(Boat::getName);
+
     public void addBoat(Boat boat) {
         boats.add(boat);
     }
@@ -65,15 +70,17 @@ public class BoatManager {
         }
 
         if (sortBy != null) {
+            Comparator<Boat> comparator = NAME_COMPARATOR;
+
             if (sortBy.equals("price")) {
-                Collections.sort(result, Comparator.comparing(Boat::getPrice));
+                comparator = PRICE_COMPARATOR;
             } else if (sortBy.equals("capacity")) {
-                Collections.sort(result, Comparator.comparing(Boat::getCapacity));
+                comparator = CAPACITY_COMPARATOR;
             } else if (sortBy.equals("type")) {
-                Collections.sort(result, Comparator.comparing(BoatManager::getBoatTypeName));
-            } else {
-                Collections.sort(result, Comparator.comparing(Boat::getName));
+                comparator = TYPE_COMPARATOR;
             }
+
+            Collections.sort(result, comparator);
 
             if (sortOrder != null && sortOrder.equals("desc")) {
                 Collections.reverse(result);
