@@ -66,9 +66,9 @@ public class BoatManager {
 
         if (sortBy != null) {
             if (sortBy.equals("price")) {
-                Collections.sort(result, Comparator.comparingDouble(Boat::getPrice));
+                Collections.sort(result, Comparator.comparing(Boat::getPrice));
             } else if (sortBy.equals("capacity")) {
-                Collections.sort(result, Comparator.comparingInt(Boat::getCapacity));
+                Collections.sort(result, Comparator.comparing(Boat::getCapacity));
             } else if (sortBy.equals("type")) {
                 Collections.sort(result, Comparator.comparing(BoatManager::getBoatTypeName));
             } else {
