@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class BoatManager {
@@ -25,7 +27,7 @@ public class BoatManager {
         return null;
     }
 
-    public List<Boat> search(String keyword, Integer minCapacity, Integer maxCapacity, BoatType type, Double minPrice, Double maxPrice) {
+    public List<Boat> search(String keyword, Integer minCapacity, Integer maxCapacity, BoatType type, Double minPrice, Double maxPrice, String sortBy, String sortOrder) {
 
         List<Boat> result = new ArrayList<>();
 
@@ -61,7 +63,28 @@ public class BoatManager {
 
             result.add(b);
         }
+
+        if (sortBy != null) {
+            if (sortBy.equals("price")) {
+                Collections.sort(result, Comparator.comparingDouble(Boat::getPrice));
+            } else if (sortBy.equals("capacity")) {
+                Collections.sort(result, Comparator.comparingInt(Boat::getCapacity));
+            } else if (sortBy.equals("type")) {
+                Collections.sort(result, Comparator.comparing(BoatManager::getBoatTypeName));
+            } else {
+                Collections.sort(result, Comparator.comparing(Boat::getName));
+            }
+
+            if (sortOrder != null && sortOrder.equals("desc")) {
+                Collections.reverse(result);
+            }
+        }
+        
         return result;
+    }
+
+    private static String getBoatTypeName(Boat boat) {
+        return boat.getType().name();
     }
 
     public List<Boat> findAvailableBoat() {
