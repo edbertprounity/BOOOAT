@@ -135,7 +135,42 @@ public class MemberPage implements Page {
             type = BoatType.JET_SKI;
         }
 
-        List<Boat> results = boatManager.search(nameKeyword, minCapacity, maxCapacity, type, minPrice, maxPrice);
+        System.out.println("\nSort results by:");
+        System.out.println("1. Name");
+        System.out.println("2. Price");
+        System.out.println("3. Capacity");
+        System.out.println("4. Type");
+        System.out.println("0. No sort");
+        System.out.print("Choose sort option (or 0): ");
+
+        int sortChoice = In.nextInt();
+        String sortBy = null;
+
+        if (sortChoice == 1) {
+            sortBy = "name";
+        } else if (sortChoice == 2) {
+            sortBy = "price";
+        } else if (sortChoice == 3) {
+            sortBy = "capacity";
+        } else if (sortChoice == 4) {
+            sortBy = "type";
+        }
+
+        String sortOrder = "asc";
+        if (sortBy != null) {
+            System.out.println("\nSort order:");
+            System.out.println("1. Ascending");
+            System.out.println("2. Descending");
+            System.out.print("Choose sort order (or 1): ");
+
+            int sortOrderChoice = In.nextInt();
+            if (sortOrderChoice == 2) {
+                sortOrder = "desc";
+            }
+        }
+
+        List<Boat> results = boatManager.search(nameKeyword, minCapacity, maxCapacity, type, minPrice, maxPrice, sortBy,
+                sortOrder);
         displaySearchResults(results);
     }
 
