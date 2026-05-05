@@ -58,8 +58,7 @@ public class MemberController {
             model.getSearchKeyword(),
             model.getMinCapacity(), model.getMaxCapacity(),
             model.getFilterType(),
-            model.getMinPrice(), model.getMaxPrice(),
-            null, null
+            model.getMinPrice(), model.getMaxPrice()
         );
         model.setAvailableBoats(filtered);
     }

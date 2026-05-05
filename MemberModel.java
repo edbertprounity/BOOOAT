@@ -11,6 +11,7 @@ public class MemberModel {
     private final StringProperty points = new SimpleStringProperty("0");
     private final StringProperty tier = new SimpleStringProperty("");
     private final StringProperty discount = new SimpleStringProperty("0%");
+    private final StringProperty welcomeText = new SimpleStringProperty("");
 
     private final StringProperty searchKeyword = new SimpleStringProperty(null);
     private final ObjectProperty<Integer> minCapacity = new SimpleObjectProperty<>(null);
@@ -28,6 +29,7 @@ public class MemberModel {
     public StringProperty pointsProperty() { return points; }
     public StringProperty tierProperty() { return tier; }
     public StringProperty discountProperty() { return discount; }
+    public StringProperty welcomeTextProperty() { return welcomeText; }
 
     public StringProperty searchKeywordProperty() { return searchKeyword; }
     public ObjectProperty<Integer> minCapacityProperty() { return minCapacity; }
@@ -55,6 +57,7 @@ public class MemberModel {
         this.discount.set(String.format("%.0f%%", member.discount() * 100));
         this.currentRentals.setAll(member.getCurrentRental());
         this.rentalHistory.setAll(member.getRentalHistory());
+        this.welcomeText.set(member.getName() + " [" + member.getMembership() + "]");
     }
 
     public void setAvailableBoats(java.util.List<Boat> boats) {

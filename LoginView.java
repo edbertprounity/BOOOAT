@@ -26,10 +26,14 @@ public class LoginView {
         Label title = new Label("BOOOAT Login");
 
         TextField usernameField = new TextField();
-        usernameField.setPromptText("Username");
 
         TextField passwordField = new TextField();
-        passwordField.setPromptText("Password");
+
+        HBox usernameRow = new HBox(10, new Label("Username:"), usernameField);
+        usernameRow.setAlignment(Pos.CENTER);
+
+        HBox passwordRow = new HBox(10, new Label("Password:"), passwordField);
+        passwordRow.setAlignment(Pos.CENTER);
 
         usernameField.textProperty().addListener((obs, oldVal, newVal) -> controller.updateUsername(newVal));
         passwordField.textProperty().addListener((obs, oldVal, newVal) -> controller.updatePassword(newVal));
@@ -42,8 +46,8 @@ public class LoginView {
 
         root.getChildren().addAll(
             title,
-            new Label("Username:"), usernameField,
-            new Label("Password:"), passwordField,
+            usernameRow,
+            passwordRow,
             buttonRow
         );
     }

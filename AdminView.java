@@ -159,13 +159,16 @@ public class AdminView {
         TableColumn<Boat, String> nameCol = new TableColumn<>("Name");
         nameCol.setCellValueFactory(c -> c.getValue().nameProperty());
 
+        TableColumn<Boat, BoatType> typeCol = new TableColumn<>("Type");
+        typeCol.setCellValueFactory(c -> c.getValue().typeProperty());
+
         TableColumn<Boat, Double> priceCol = new TableColumn<>("Price");
         priceCol.setCellValueFactory(c -> c.getValue().priceProperty().asObject());
 
         TableColumn<Boat, Integer> capCol = new TableColumn<>("Capacity");
         capCol.setCellValueFactory(c -> c.getValue().capacityProperty().asObject());
 
-        table.getColumns().addAll(nameCol, priceCol, capCol);
+        table.getColumns().addAll(nameCol, typeCol, priceCol, capCol);
         return table;
     }
 

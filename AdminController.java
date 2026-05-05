@@ -14,8 +14,12 @@ public class AdminController {
     }
 
     public void addBoat(String name, String priceText, BoatType type, String capacityText) {
-        if (name == null || name.trim().isEmpty()) return;
-        if (type == null) return;
+        if (name == null || name.trim().isEmpty()) {
+            return;
+        }
+        if (type == null) {
+            return;
+        }
 
         double price;
         int capacity;
@@ -75,7 +79,9 @@ public class AdminController {
         int active = 0;
         for (RentRecord r : records) {
             revenue += r.getPrice();
-            if (r.isActive()) active++;
+            if (r.isActive()) {
+                active++;
+            }
         }
         model.updateStats(revenue, records.size(), active);
     }

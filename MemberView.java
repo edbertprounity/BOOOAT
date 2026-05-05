@@ -10,6 +10,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -28,34 +30,35 @@ public class MemberView {
     }
 
     private void initView() {
-        this.root = new VBox(10);
-        root.setAlignment(Pos.CENTER_LEFT);
+        this.root = new VBox(20);
+        root.setAlignment(Pos.TOP_CENTER);
 
-        // --- Header ---
+        // --- 1. Member details header (HBox) ---
         Label welcomeLabel = new Label();
-        welcomeLabel.textProperty().bind(
-            javafx.beans.binding.Bindings.concat(model.nameProperty(), " [", model.tierProperty(), "]")
-        );
+        welcomeLabel.textProperty().bind(model.welcomeTextProperty());
 
         this.detailsBtn = new Button("Member Details");
         this.logoutBtn = new Button("Logout");
-
-        HBox header = new HBox(10, welcomeLabel, detailsBtn, logoutBtn);
-        header.setAlignment(Pos.CENTER_LEFT);
         
+        Pane spacer = new Pane();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // --- Search ---
+        HBox header = new HBox(10, welcomeLabel, spacer, detailsBtn, logoutBtn);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        // --- 2. Main content area (HBox) ---
+        HBox contentHBox = new HBox(20);
+        VBox.setVgrow(contentHBox, Priority.ALWAYS);
+
+        // Left VBox: Search and Filters
+        VBox filterVBox = new VBox(10);
+        filterVBox.setAlignment(Pos.TOP_LEFT);
+
         TextField searchField = new TextField();
-        searchField.setPromptText("Search boats...");
         searchField.textProperty().addListener((obs, oldVal, newVal) -> controller.updateSearch(newVal));
 
-        HBox searchRow = new HBox(10, new Label("Search:"), searchField);
-        searchRow.setAlignment(Pos.CENTER_LEFT);
-
-        // --- Filters ---
         TextField minCapField = new TextField();
         TextField maxCapField = new TextField();
-
         minCapField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("\\d*")) { minCapField.setText(oldVal); return; }
             controller.updateMinCapacity(newVal.isEmpty() ? null : Integer.parseInt(newVal));
@@ -67,7 +70,6 @@ public class MemberView {
 
         TextField minPriceField = new TextField();
         TextField maxPriceField = new TextField();
-
         minPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("\\d*(\\.\\d*)?")) { minPriceField.setText(oldVal); return; }
             controller.updateMinPrice(newVal.isEmpty() ? null : Double.parseDouble(newVal));
@@ -78,8 +80,7 @@ public class MemberView {
         });
 
         ToggleGroup typeGroup = new ToggleGroup();
-        HBox typeBox = new HBox(10);
-        typeBox.setAlignment(Pos.CENTER_LEFT);
+        VBox typeBox = new VBox(5);
         for (BoatType bt : BoatType.values()) {
             RadioButton rb = new RadioButton(bt.name());
             rb.setToggleGroup(typeGroup);
@@ -92,27 +93,27 @@ public class MemberView {
 
         Button clearBtn = new Button("Clear Filters");
         clearBtn.setOnAction(e -> {
-            searchField.clear();
-            minCapField.clear();
-            maxCapField.clear();
-            minPriceField.clear();
-            maxPriceField.clear();
-            typeGroup.selectToggle(null);
+            searchField.clear(); minCapField.clear(); maxCapField.clear();
+            minPriceField.clear(); maxPriceField.clear(); typeGroup.selectToggle(null);
             controller.clearFilters();
         });
 
-        HBox filterCapRow = new HBox(10, new Label("Cap:"), minCapField, maxCapField);
-        filterCapRow.setAlignment(Pos.CENTER_LEFT);
+        filterVBox.getChildren().addAll(
+            new Label("Search Name:"), searchField,
+            new Label("Capacity (Min/Max):"), new HBox(5, minCapField, maxCapField),
+            new Label("Price (Min/Max):"), new HBox(5, minPriceField, maxPriceField),
+            new Label("Boat Type:"), typeBox,
+            clearBtn
+        );
 
-        HBox filterPriceRow = new HBox(10, new Label("Price:"), minPriceField, maxPriceField);
-        filterPriceRow.setAlignment(Pos.CENTER_LEFT);
-        
-        HBox filterTypeRow = new HBox(10, new Label("Type:"), typeBox);
-        filterPriceRow.setAlignment(Pos.CENTER_LEFT);
+        // Right VBox: Table area
+        VBox tableVBox = new VBox(10);
+        tableVBox.setAlignment(Pos.TOP_LEFT);
+        HBox.setHgrow(tableVBox, Priority.ALWAYS);
 
-        // --- Available boats ---
         TableView<Boat> availTable = createBoatTable();
         availTable.setItems(model.getAvailableBoats());
+        VBox.setVgrow(availTable, Priority.ALWAYS);
 
         Button rentBtn = new Button("Rent Selected Boat");
         rentBtn.setOnAction(e -> {
@@ -120,17 +121,12 @@ public class MemberView {
             if (selected != null) showRentDialog(selected);
         });
 
+        tableVBox.getChildren().addAll(new Label("Available Boats:"), availTable, rentBtn);
+
+        contentHBox.getChildren().addAll(filterVBox, tableVBox);
         detailsBtn.setOnAction(e -> showDetailsWindow());
 
-        root.getChildren().addAll(
-            header,
-            searchRow,
-            filterCapRow,
-            filterPriceRow,
-            filterTypeRow,
-            clearBtn,
-            new Label("Available Boats:"), availTable, rentBtn
-        );
+        root.getChildren().addAll(header, contentHBox);
     }
 
     private void showRentDialog(Boat boat) {
@@ -285,7 +281,7 @@ public class MemberView {
             new Label("Current Active Rentals:"), activeTable, returnBtn,
             new Label("Rental History:"), historyTable
         );
-
+        
         stage.setScene(new Scene(layout, 550, 650));
         stage.show();
     }

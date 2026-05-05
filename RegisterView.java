@@ -27,13 +27,17 @@ public class RegisterView {
         Label title = new Label("Join BOOOAT");
 
         TextField nameField = new TextField();
-        nameField.setPromptText("Full Name");
-
         TextField usernameField = new TextField();
-        usernameField.setPromptText("Username");
-
         TextField passwordField = new TextField();
-        passwordField.setPromptText("Password");
+
+        HBox nameRow = new HBox(10, new Label("Full Name:"), nameField);
+        nameRow.setAlignment(Pos.CENTER);
+
+        HBox usernameRow = new HBox(10, new Label("Username:"), usernameField);
+        usernameRow.setAlignment(Pos.CENTER);
+
+        HBox passwordRow = new HBox(10, new Label("Password:"), passwordField);
+        passwordRow.setAlignment(Pos.CENTER);
 
         nameField.textProperty().addListener((obs, oldVal, newVal) -> controller.updateFullName(newVal));
         usernameField.textProperty().addListener((obs, oldVal, newVal) -> controller.updateUsername(newVal));
@@ -54,9 +58,9 @@ public class RegisterView {
 
         root.getChildren().addAll(
             title,
-            new Label("Full Name:"), nameField,
-            new Label("Username:"), usernameField,
-            new Label("Password:"), passwordField,
+            nameRow,
+            usernameRow,
+            passwordRow,
             errorLabel,
             buttonRow
         );
