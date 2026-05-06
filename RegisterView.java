@@ -39,9 +39,15 @@ public class RegisterView {
         HBox passwordRow = new HBox(10, new Label("Password:"), passwordField);
         passwordRow.setAlignment(Pos.CENTER);
 
-        nameField.textProperty().addListener((obs, oldVal, newVal) -> controller.updateFullName(newVal));
-        usernameField.textProperty().addListener((obs, oldVal, newVal) -> controller.updateUsername(newVal));
-        passwordField.textProperty().addListener((obs, oldVal, newVal) -> controller.updatePassword(newVal));
+        nameField.textProperty().addListener((obs, oldVal, newVal) -> {
+            controller.updateFullName(newVal);
+        });
+        usernameField.textProperty().addListener((obs, oldVal, newVal) -> {
+            controller.updateUsername(newVal);
+        });
+        passwordField.textProperty().addListener((obs, oldVal, newVal) -> {
+            controller.updatePassword(newVal);
+        });
 
         this.errorLabel = new Label("");
 
@@ -50,7 +56,11 @@ public class RegisterView {
 
         registerButton.setOnAction(e -> {
             boolean success = controller.processRegistration();
-            errorLabel.setText(success ? "" : "Registration failed. Check all fields or username already exists.");
+            if (success) {
+                errorLabel.setText("");
+            } else {
+                errorLabel.setText("Registration failed. Check all fields or username already exists.");
+            }
         });
 
         HBox buttonRow = new HBox(10, registerButton, backButton);

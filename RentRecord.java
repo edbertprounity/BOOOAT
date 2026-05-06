@@ -1,4 +1,3 @@
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
 public class RentRecord {
@@ -7,7 +6,7 @@ public class RentRecord {
     private Boat boat;
     private double price;
     private boolean isActive;
-    private final DoubleProperty priceProperty;
+    private final SimpleDoubleProperty priceProperty;
 
     public RentRecord(Member member, Boat boat, double price) {
         this.member = member;
@@ -29,7 +28,9 @@ public class RentRecord {
         return price;
     }
 
-    public DoubleProperty priceProperty() { return priceProperty; }
+    public SimpleDoubleProperty priceProperty() {
+        return priceProperty;
+    }
 
     public boolean isActive() {
         return isActive;

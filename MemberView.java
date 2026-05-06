@@ -1,4 +1,3 @@
-import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,10 +7,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -40,43 +38,41 @@ public class MemberView {
         this.detailsBtn = new Button("Member Details");
         this.logoutBtn = new Button("Logout");
         
-        Pane spacer = new Pane();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        HBox header = new HBox(10, welcomeLabel, spacer, detailsBtn, logoutBtn);
+        HBox header = new HBox(10, welcomeLabel, detailsBtn, logoutBtn);
         header.setAlignment(Pos.CENTER_LEFT);
 
         // --- 2. Main content area (HBox) ---
         HBox contentHBox = new HBox(20);
-        VBox.setVgrow(contentHBox, Priority.ALWAYS);
 
         // Left VBox: Search and Filters
         VBox filterVBox = new VBox(10);
         filterVBox.setAlignment(Pos.TOP_LEFT);
 
         TextField searchField = new TextField();
-        searchField.textProperty().addListener((obs, oldVal, newVal) -> controller.updateSearch(newVal));
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> {
+            controller.updateSearch(newVal);
+        });
 
         TextField minCapField = new TextField();
         TextField maxCapField = new TextField();
+        configIntField(minCapField);
+        configIntField(maxCapField);
         minCapField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("\\d*")) { minCapField.setText(oldVal); return; }
-            controller.updateMinCapacity(newVal.isEmpty() ? null : Integer.parseInt(newVal));
+            controller.updateMinCapacity(newVal);
         });
         maxCapField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("\\d*")) { maxCapField.setText(oldVal); return; }
-            controller.updateMaxCapacity(newVal.isEmpty() ? null : Integer.parseInt(newVal));
+            controller.updateMaxCapacity(newVal);
         });
 
         TextField minPriceField = new TextField();
         TextField maxPriceField = new TextField();
+        configDoubleField(minPriceField);
+        configDoubleField(maxPriceField);
         minPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("\\d*(\\.\\d*)?")) { minPriceField.setText(oldVal); return; }
-            controller.updateMinPrice(newVal.isEmpty() ? null : Double.parseDouble(newVal));
+            controller.updateMinPrice(newVal);
         });
         maxPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("\\d*(\\.\\d*)?")) { maxPriceField.setText(oldVal); return; }
-            controller.updateMaxPrice(newVal.isEmpty() ? null : Double.parseDouble(newVal));
+            controller.updateMaxPrice(newVal);
         });
 
         ToggleGroup typeGroup = new ToggleGroup();
@@ -87,14 +83,22 @@ public class MemberView {
             rb.setUserData(bt);
             typeBox.getChildren().add(rb);
         }
-        typeGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) ->
-            controller.updateFilterType(newVal == null ? null : (BoatType) newVal.getUserData())
-        );
+        typeGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+            BoatType type = null;
+            if (newVal != null) {
+                type = (BoatType) newVal.getUserData();
+            }
+            controller.updateFilterType(type);
+        });
 
         Button clearBtn = new Button("Clear Filters");
         clearBtn.setOnAction(e -> {
-            searchField.clear(); minCapField.clear(); maxCapField.clear();
-            minPriceField.clear(); maxPriceField.clear(); typeGroup.selectToggle(null);
+            searchField.clear();
+            minCapField.clear();
+            maxCapField.clear();
+            minPriceField.clear();
+            maxPriceField.clear();
+            typeGroup.selectToggle(null);
             controller.clearFilters();
         });
 
@@ -109,16 +113,16 @@ public class MemberView {
         // Right VBox: Table area
         VBox tableVBox = new VBox(10);
         tableVBox.setAlignment(Pos.TOP_LEFT);
-        HBox.setHgrow(tableVBox, Priority.ALWAYS);
 
         TableView<Boat> availTable = createBoatTable();
         availTable.setItems(model.getAvailableBoats());
-        VBox.setVgrow(availTable, Priority.ALWAYS);
 
         Button rentBtn = new Button("Rent Selected Boat");
         rentBtn.setOnAction(e -> {
             Boat selected = availTable.getSelectionModel().getSelectedItem();
-            if (selected != null) showRentDialog(selected);
+            if (selected != null) {
+                showRentDialog(selected);
+            }
         });
 
         tableVBox.getChildren().addAll(new Label("Available Boats:"), availTable, rentBtn);
@@ -149,33 +153,24 @@ public class MemberView {
         durationRow.setAlignment(Pos.CENTER_LEFT);
 
         TextField codeField = new TextField();
+        configIntField(durationField);
+
         Button applyCodeBtn = new Button("Apply Code");
         HBox codeRow = new HBox(10, new Label("Discount Code:"), codeField, applyCodeBtn);
         codeRow.setAlignment(Pos.CENTER_LEFT);
 
-        SimpleStringProperty appliedCode = new SimpleStringProperty("");
         Label totalLabel = new Label("Total: $0.00");
-
-        Runnable updatePrice = () -> {
-            int days = durationField.getText().isEmpty() ? 0 : Integer.parseInt(durationField.getText());
-            double total = controller.getCalculatedPrice(boat, days, appliedCode.get());
-            totalLabel.setText(String.format("Total: $%.2f", total));
-        };
+        totalLabel.textProperty().bind(model.rentalTotalPriceProperty().asString("Total: $%.2f"));
 
         durationField.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal.matches("[1-9][0-9]*") && !newVal.isEmpty()) { durationField.setText(oldVal); return; }
-            updatePrice.run();
+            controller.updateRentalDuration(boat, newVal);
         });
 
-        applyCodeBtn.setOnAction(e -> {
-            appliedCode.set(codeField.getText());
-            updatePrice.run();
-        });
+        applyCodeBtn.setOnAction(e -> controller.applyDiscountCode(boat, codeField.getText()));
 
         Button confirmBtn = new Button("Confirm Booking");
         confirmBtn.setOnAction(e -> {
-            int days = durationField.getText().isEmpty() ? 0 : Integer.parseInt(durationField.getText());
-            controller.executeRental(boat, days, appliedCode.get());
+            controller.executeRental(boat);
             dialog.close();
         });
 
@@ -187,7 +182,7 @@ public class MemberView {
 
         layout.getChildren().addAll(boatRow, detailRow, durationRow, codeRow, totalLabel, btnRow);
 
-        updatePrice.run();
+        controller.updateRentalDuration(boat, "1");
         dialog.setScene(new Scene(layout, 350, 250));
         dialog.show();
     }
@@ -242,18 +237,13 @@ public class MemberView {
         TextField confirmPassField = new TextField();
         confirmPassField.setPromptText("Confirm password");
         Label passErrorLabel = new Label("");
+        passErrorLabel.textProperty().bind(model.passwordErrorProperty());
 
         Button savePassBtn = new Button("Save Password");
         savePassBtn.setOnAction(e -> {
-            String p1 = newPassField.getText();
-            String p2 = confirmPassField.getText();
-            if (!p1.isEmpty() && p1.equals(p2)) {
-                controller.updatePassword(p1);
-                newPassField.clear();
-                confirmPassField.clear();
-                passErrorLabel.setText("");
-            } else {
-                passErrorLabel.setText("Passwords do not match or are empty.");
+            controller.updatePassword(newPassField.getText(), confirmPassField.getText());
+            if (model.passwordErrorProperty().get().isEmpty()) {
+                newPassField.clear(); confirmPassField.clear();
             }
         });
 
@@ -295,11 +285,11 @@ public class MemberView {
         TableColumn<Boat, BoatType> typeCol = new TableColumn<>("Type");
         typeCol.setCellValueFactory(c -> c.getValue().typeProperty());
 
-        TableColumn<Boat, Double> priceCol = new TableColumn<>("Price/Day");
-        priceCol.setCellValueFactory(c -> c.getValue().priceProperty().asObject());
+        TableColumn<Boat, Number> priceCol = new TableColumn<>("Price/Day");
+        priceCol.setCellValueFactory(c -> c.getValue().priceProperty());
 
-        TableColumn<Boat, Integer> capCol = new TableColumn<>("Capacity");
-        capCol.setCellValueFactory(c -> c.getValue().capacityProperty().asObject());
+        TableColumn<Boat, Number> capCol = new TableColumn<>("Capacity");
+        capCol.setCellValueFactory(c -> c.getValue().capacityProperty());
 
         table.getColumns().addAll(nameCol, typeCol, priceCol, capCol);
         return table;
@@ -311,5 +301,23 @@ public class MemberView {
 
     public Parent asParent() {
         return root;
+    }
+
+    private void configIntField(TextField field) {
+        field.setTextFormatter(new TextFormatter<>((TextFormatter.Change c) -> {
+            if (c.getControlNewText().matches("\\d*")) {
+                return c;
+            }
+            return null;
+        }));
+    }
+
+    private void configDoubleField(TextField field) {
+        field.setTextFormatter(new TextFormatter<>((TextFormatter.Change c) -> {
+            if (c.getControlNewText().matches("\\d*(\\.\\d*)?")) {
+                return c;
+            }
+            return null;
+        }));
     }
 }

@@ -1,7 +1,6 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.control.*;;
 /*
 public class GUIMain extends Application {
     
@@ -114,13 +113,13 @@ public class GUIMain extends Application {
 
     private void openLoginStage(UserManager userManager, BoatManager boatManager, RentalManager rentalManager) {
         LoginModel loginModel = new LoginModel();
-        LoginController loginController = new LoginController(userManager, loginModel);
+        loginModel.setUserManager(userManager);
+        LoginController loginController = new LoginController(loginModel);
         LoginView loginView = new LoginView(loginController, loginModel);
 
         Stage loginStage = new Stage();
         loginStage.setTitle("BOOOAT - Login");
         loginStage.setScene(new Scene(loginView.asParent(), 350, 280));
-        loginStage.setResizable(false);
         loginStage.show();
 
         // Register navigation
@@ -133,7 +132,8 @@ public class GUIMain extends Application {
             User user = loginController.processLogin();
             if (user instanceof Member) {
                 openMemberStage(userManager, boatManager, rentalManager, (Member) user, loginStage);
-            } else if (user instanceof Admin) {
+            } 
+            if (user instanceof Admin) {
                 openAdminStage(userManager, boatManager, rentalManager, loginStage);
             }
         });
@@ -141,13 +141,13 @@ public class GUIMain extends Application {
 
     private void openRegisterStage(UserManager userManager, BoatManager boatManager, RentalManager rentalManager, Stage previous) {
         RegisterModel registerModel = new RegisterModel();
-        RegisterController registerController = new RegisterController(userManager, registerModel);
+        registerModel.setUserManager(userManager);
+        RegisterController registerController = new RegisterController(registerModel);
         RegisterView registerView = new RegisterView(registerController, registerModel);
 
         Stage registerStage = new Stage();
         registerStage.setTitle("BOOOAT - Register");
         registerStage.setScene(new Scene(registerView.asParent(), 350, 320));
-        registerStage.setResizable(false);
         registerStage.show();
         previous.close();
 
@@ -159,7 +159,10 @@ public class GUIMain extends Application {
 
     private void openMemberStage(UserManager userManager, BoatManager boatManager, RentalManager rentalManager, Member member, Stage previous) {
         MemberModel memModel = new MemberModel();
-        MemberController memCtrl = new MemberController(boatManager, rentalManager, member, memModel);
+        memModel.setBoatManager(boatManager);
+        memModel.setRentalManager(rentalManager);
+        memModel.setMember(member);
+        MemberController memCtrl = new MemberController(memModel);
         MemberView memView = new MemberView(memCtrl, memModel);
 
         Stage memberStage = new Stage();
@@ -176,7 +179,9 @@ public class GUIMain extends Application {
 
     private void openAdminStage(UserManager userManager, BoatManager boatManager, RentalManager rentalManager, Stage previous) {
         AdminModel adminModel = new AdminModel();
-        AdminController adminCtrl = new AdminController(boatManager, rentalManager, adminModel);
+        adminModel.setBoatManager(boatManager);
+        adminModel.setRentalManager(rentalManager);
+        AdminController adminCtrl = new AdminController(adminModel);
         AdminView adminView = new AdminView(adminCtrl, adminModel);
 
         Stage adminStage = new Stage();

@@ -90,8 +90,10 @@ public class RentalManager {
     public void returnBoat(Member member, Boat boat) {
 
         for (RentRecord r : records) {
-
-            if (r.getMember() == member && r.getBoat() == boat && r.isActive()) {
+            boolean matches = r.getMember() == member 
+                              && r.getBoat() == boat 
+                              && r.isActive();
+            if (matches) {
                 r.close();
                 System.out.println("Boat returned successfully.");
                 return;

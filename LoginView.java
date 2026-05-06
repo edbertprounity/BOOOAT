@@ -35,8 +35,12 @@ public class LoginView {
         HBox passwordRow = new HBox(10, new Label("Password:"), passwordField);
         passwordRow.setAlignment(Pos.CENTER);
 
-        usernameField.textProperty().addListener((obs, oldVal, newVal) -> controller.updateUsername(newVal));
-        passwordField.textProperty().addListener((obs, oldVal, newVal) -> controller.updatePassword(newVal));
+        usernameField.textProperty().addListener((obs, oldVal, newVal) -> {
+            controller.updateUsername(newVal);
+        });
+        passwordField.textProperty().addListener((obs, oldVal, newVal) -> {
+            controller.updatePassword(newVal);
+        });
 
         this.loginButton = new Button("Login");
         this.registerButton = new Button("Register");

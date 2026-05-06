@@ -2,18 +2,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminController {
-    private BoatManager boatManager;
-    private RentalManager rentalManager;
     private AdminModel model;
 
-    public AdminController(BoatManager boatManager, RentalManager rentalManager, AdminModel model) {
-        this.boatManager = boatManager;
-        this.rentalManager = rentalManager;
+    public AdminController(AdminModel model) {
         this.model = model;
         refreshData();
     }
 
-    public void addBoat(String name, String priceText, BoatType type, String capacityText) {
+    public void addBoat(String name, String priceStr, BoatType type, String capacityStr) {
+        double price = convertStringToDouble(priceStr);
+        int capacity = convertStringToInt(capacityStr);
+
         if (name == null || name.trim().isEmpty()) {
             return;
         }
@@ -21,46 +20,64 @@ public class AdminController {
             return;
         }
 
-        double price;
-        int capacity;
-        try {
-            price = Double.parseDouble(priceText);
-            capacity = Integer.parseInt(capacityText);
-        } catch (NumberFormatException e) {
+        if (price <= 0 || capacity <= 0) {
             return;
         }
 
-        if (price <= 0 || capacity <= 0) return;
-
-        boatManager.addBoat(new Boat(name, price, type, capacity));
+        model.getBoatManager().addBoat(new Boat(name, price, type, capacity));
         refreshData();
     }
 
-    public boolean removeBoat(Boat boat) {
-        if (boat == null) return false;
+    private int convertStringToInt(String s) {
+        if (s == null || s.isEmpty()) {
+            return 0;
+        }
+        if ("-".equals(s)) {
+            return 0;
+        }
+        return Integer.parseInt(s); // Convert string into integer
+    }
 
-        for (RentRecord record : rentalManager.getAllRecords()) {
+    private double convertStringToDouble(String s) {
+        if (s == null || s.isEmpty()) {
+            return 0.0;
+        }
+        if ("-".equals(s)) {
+            return 0.0;
+        }
+        return Double.parseDouble(s);
+    }
+
+    public boolean removeBoat(Boat boat) {
+        if (boat == null) {
+            return false;
+        }
+
+        for (RentRecord record : model.getRentalManager().getAllRecords()) {
             if (record.isActive() && record.getBoat() == boat) {
                 return false;
             }
         }
 
-        boatManager.removeBoat(boat);
+        model.getBoatManager().removeBoat(boat);
         refreshData();
         return true;
     }
 
     public List<RentRecord> filterRentals(String type) {
         if (type.equals("Active")) {
-            return rentalManager.getActiveRecords();
-        } else if (type.equals("Completed")) {
+            return model.getRentalManager().getActiveRecords();
+        } 
+        if (type.equals("Completed")) {
             List<RentRecord> completed = new ArrayList<>();
-            for (RentRecord r : rentalManager.getAllRecords()) {
-                if (!r.isActive()) completed.add(r);
+            for (RentRecord r : model.getRentalManager().getAllRecords()) {
+                if (!r.isActive()) {
+                    completed.add(r);
+                }
             }
             return completed;
         }
-        return rentalManager.getAllRecords();
+        return model.getRentalManager().getAllRecords();
     }
 
     public void applyRentalFilter(String type) {
@@ -69,8 +86,8 @@ public class AdminController {
     }
 
     public void refreshData() {
-        List<Boat> boats = boatManager.getAllBoats();
-        List<RentRecord> records = rentalManager.getAllRecords();
+        List<Boat> boats = model.getBoatManager().getAllBoats();
+        List<RentRecord> records = model.getRentalManager().getAllRecords();
 
         model.setBoats(boats);
         model.setRentals(records);

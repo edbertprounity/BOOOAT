@@ -1,9 +1,7 @@
 public class LoginController {
-    private UserManager userManager;
     private LoginModel model;
 
-    public LoginController(UserManager userManager, LoginModel model) {
-        this.userManager = userManager;
+    public LoginController(LoginModel model) {
         this.model = model;
     }
 
@@ -19,7 +17,7 @@ public class LoginController {
         String username = model.getUsername();
         String password = model.getPassword();
 
-        User user = userManager.findByUsername(username);
+        User user = model.getUserManager().findByUsername(username);
         if (user != null && user.getPassword().equals(password)) {
             return user;
         }

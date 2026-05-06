@@ -1,53 +1,163 @@
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class MemberModel {
-    private final StringProperty name = new SimpleStringProperty("");
-    private final StringProperty username = new SimpleStringProperty("");
-    private final StringProperty points = new SimpleStringProperty("0");
-    private final StringProperty tier = new SimpleStringProperty("");
-    private final StringProperty discount = new SimpleStringProperty("0%");
-    private final StringProperty welcomeText = new SimpleStringProperty("");
+    private BoatManager boatManager;
+    private RentalManager rentalManager;
+    private Member member;
 
-    private final StringProperty searchKeyword = new SimpleStringProperty(null);
-    private final ObjectProperty<Integer> minCapacity = new SimpleObjectProperty<>(null);
-    private final ObjectProperty<Integer> maxCapacity = new SimpleObjectProperty<>(null);
-    private final ObjectProperty<Double> minPrice = new SimpleObjectProperty<>(null);
-    private final ObjectProperty<Double> maxPrice = new SimpleObjectProperty<>(null);
-    private final ObjectProperty<BoatType> filterType = new SimpleObjectProperty<>(null);
+    private final SimpleStringProperty name = new SimpleStringProperty("");
+    private final SimpleStringProperty username = new SimpleStringProperty("");
+    private final SimpleStringProperty points = new SimpleStringProperty("0");
+    private final SimpleStringProperty tier = new SimpleStringProperty("");
+    private final SimpleStringProperty discount = new SimpleStringProperty("0%");
+    private final SimpleStringProperty welcomeText = new SimpleStringProperty("");
+
+    // UI State for Dialogs
+    private final SimpleStringProperty passwordError = new SimpleStringProperty("");
+    private final SimpleIntegerProperty rentalDuration = new SimpleIntegerProperty(1);
+    private final SimpleStringProperty appliedDiscountCode = new SimpleStringProperty("");
+    private final SimpleDoubleProperty rentalTotalPrice = new SimpleDoubleProperty(0.0);
+
+    private final SimpleStringProperty searchKeyword = new SimpleStringProperty(null);
+    private final SimpleIntegerProperty minCapacity = new SimpleIntegerProperty(-1);
+    private final SimpleIntegerProperty maxCapacity = new SimpleIntegerProperty(-1);
+    private final SimpleDoubleProperty minPrice = new SimpleDoubleProperty(-1.0);
+    private final SimpleDoubleProperty maxPrice = new SimpleDoubleProperty(-1.0);
+    private final SimpleObjectProperty<BoatType> filterType = new SimpleObjectProperty<>(null);
 
     private final ObservableList<Boat> availableBoats = FXCollections.observableArrayList();
     private final ObservableList<Boat> currentRentals = FXCollections.observableArrayList();
     private final ObservableList<Boat> rentalHistory = FXCollections.observableArrayList();
 
-    public StringProperty nameProperty() { return name; }
-    public StringProperty usernameProperty() { return username; }
-    public StringProperty pointsProperty() { return points; }
-    public StringProperty tierProperty() { return tier; }
-    public StringProperty discountProperty() { return discount; }
-    public StringProperty welcomeTextProperty() { return welcomeText; }
+    public void setBoatManager(BoatManager boatManager) {
+        this.boatManager = boatManager;
+    }
 
-    public StringProperty searchKeywordProperty() { return searchKeyword; }
-    public ObjectProperty<Integer> minCapacityProperty() { return minCapacity; }
-    public ObjectProperty<Integer> maxCapacityProperty() { return maxCapacity; }
-    public ObjectProperty<Double> minPriceProperty() { return minPrice; }
-    public ObjectProperty<Double> maxPriceProperty() { return maxPrice; }
-    public ObjectProperty<BoatType> filterTypeProperty() { return filterType; }
+    public BoatManager getBoatManager() {
+        return boatManager;
+    }
 
-    public String getSearchKeyword() { return searchKeyword.get(); }
-    public Integer getMinCapacity() { return minCapacity.get(); }
-    public Integer getMaxCapacity() { return maxCapacity.get(); }
-    public Double getMinPrice() { return minPrice.get(); }
-    public Double getMaxPrice() { return maxPrice.get(); }
-    public BoatType getFilterType() { return filterType.get(); }
+    public void setRentalManager(RentalManager rentalManager) {
+        this.rentalManager = rentalManager;
+    }
 
-    public ObservableList<Boat> getAvailableBoats() { return availableBoats; }
-    public ObservableList<Boat> getCurrentRentals() { return currentRentals; }
-    public ObservableList<Boat> getRentalHistory() { return rentalHistory; }
+    public RentalManager getRentalManager() {
+        return rentalManager;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+        setMemberData(member);
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public SimpleStringProperty nameProperty() {
+        return name;
+    }
+
+    public SimpleStringProperty usernameProperty() {
+        return username;
+    }
+
+    public SimpleStringProperty pointsProperty() {
+        return points;
+    }
+
+    public SimpleStringProperty tierProperty() {
+        return tier;
+    }
+
+    public SimpleStringProperty discountProperty() {
+        return discount;
+    }
+
+    public SimpleStringProperty welcomeTextProperty() {
+        return welcomeText;
+    }
+
+    public SimpleStringProperty passwordErrorProperty() {
+        return passwordError;
+    }
+
+    public SimpleIntegerProperty rentalDurationProperty() {
+        return rentalDuration;
+    }
+
+    public SimpleStringProperty appliedDiscountCodeProperty() {
+        return appliedDiscountCode;
+    }
+
+    public SimpleDoubleProperty rentalTotalPriceProperty() {
+        return rentalTotalPrice;
+    }
+
+    public SimpleStringProperty searchKeywordProperty() {
+        return searchKeyword;
+    }
+
+    public SimpleIntegerProperty minCapacityProperty() {
+        return minCapacity;
+    }
+
+    public SimpleIntegerProperty maxCapacityProperty() {
+        return maxCapacity;
+    }
+
+    public SimpleDoubleProperty minPriceProperty() {
+        return minPrice;
+    }
+
+    public SimpleDoubleProperty maxPriceProperty() {
+        return maxPrice;
+    }
+
+    public SimpleObjectProperty<BoatType> filterTypeProperty() {
+        return filterType;
+    }
+
+    public String getSearchKeyword() {
+        return searchKeyword.get();
+    }
+
+    public int getMinCapacity() {
+        return minCapacity.get();
+    }
+
+    public int getMaxCapacity() {
+        return maxCapacity.get();
+    }
+
+    public double getMinPrice() {
+        return minPrice.get();
+    }
+
+    public double getMaxPrice() {
+        return maxPrice.get();
+    }
+
+    public BoatType getFilterType() {
+        return filterType.get();
+    }
+
+    public ObservableList<Boat> getAvailableBoats() {
+        return availableBoats;
+    }
+
+    public ObservableList<Boat> getCurrentRentals() {
+        return currentRentals;
+    }
+
+    public ObservableList<Boat> getRentalHistory() {
+        return rentalHistory;
+    }
 
     public void setMemberData(Member member) {
         this.name.set(member.getName());
@@ -66,10 +176,10 @@ public class MemberModel {
 
     public void clearFilters() {
         searchKeyword.set(null);
-        minCapacity.set(null);
-        maxCapacity.set(null);
-        minPrice.set(null);
-        maxPrice.set(null);
+        minCapacity.set(-1);
+        maxCapacity.set(-1);
+        minPrice.set(-1.0);
+        maxPrice.set(-1.0);
         filterType.set(null);
     }
 }

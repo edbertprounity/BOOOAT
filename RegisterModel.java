@@ -1,20 +1,28 @@
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 public class RegisterModel {
-    private final StringProperty fullName = new SimpleStringProperty("");
-    private final StringProperty username = new SimpleStringProperty("");
-    private final StringProperty password = new SimpleStringProperty("");
+    private UserManager userManager;
+    private final SimpleStringProperty fullName = new SimpleStringProperty("");
+    private final SimpleStringProperty username = new SimpleStringProperty("");
+    private final SimpleStringProperty password = new SimpleStringProperty("");
 
-    public StringProperty fullNameProperty() {
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    public SimpleStringProperty fullNameProperty() {
         return fullName;
     }
 
-    public StringProperty usernameProperty() {
+    public SimpleStringProperty usernameProperty() {
         return username;
     }
 
-    public StringProperty passwordProperty() {
+    public SimpleStringProperty passwordProperty() {
         return password;
     }
 

@@ -1,4 +1,8 @@
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 public class Boat {
     private String boatName;
@@ -8,11 +12,11 @@ public class Boat {
     private final BoatType BOAT_TYPE;
 
     // JavaFX Properties for UI Binding
-    private final StringProperty nameProperty;
-    private final DoubleProperty priceProperty;
-    private final BooleanProperty availabilityProperty;
-    private final IntegerProperty capacityProperty;
-    private final ObjectProperty<BoatType> typeProperty;
+    private final SimpleStringProperty nameProperty;
+    private final SimpleDoubleProperty priceProperty;
+    private final SimpleBooleanProperty availabilityProperty;
+    private final SimpleIntegerProperty capacityProperty;
+    private final SimpleObjectProperty<BoatType> typeProperty;
 
     public Boat(String boatName, double price, BoatType boatType, int capacity){
         this.boatName = boatName;
@@ -32,31 +36,41 @@ public class Boat {
         return this.boatName;
     }
 
-    public StringProperty nameProperty() { return nameProperty; }
+    public SimpleStringProperty nameProperty() {
+        return nameProperty;
+    }
 
     double getPrice() {
         return this.price;
     }
 
-    public DoubleProperty priceProperty() { return priceProperty; }
+    public SimpleDoubleProperty priceProperty() {
+        return priceProperty;
+    }
 
     BoatType getType() {
         return this.BOAT_TYPE;
     }
 
-    public ObjectProperty<BoatType> typeProperty() { return typeProperty; }
+    public SimpleObjectProperty<BoatType> typeProperty() {
+        return typeProperty;
+    }
 
     int getCapacity() {
         return this.capacity;
     }
 
-    public IntegerProperty capacityProperty() { return capacityProperty; }
+    public SimpleIntegerProperty capacityProperty() {
+        return capacityProperty;
+    }
 
     boolean isAvailable() {
         return this.availability;
     }
 
-    public BooleanProperty availabilityProperty() { return availabilityProperty; }
+    public SimpleBooleanProperty availabilityProperty() {
+        return availabilityProperty;
+    }
 
     void setAvailability(boolean availability) {
         this.availability = availability;
@@ -64,11 +78,16 @@ public class Boat {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
+        String status = "Not Available";
+        if (this.availability) {
+            status = "Available";
+        }
+
         return "Boat Details: \n  Name: " + this.boatName + 
                "\n  Type: " + this.BOAT_TYPE + 
                "\n  Price: $" + this.price + "/day" +
                "\n  Capacity: " + this.capacity + " persons" +
-               "\n  Status: " + (this.availability ? "Available" : "Not Available");
+               "\n  Status: " + status;
     }
 }

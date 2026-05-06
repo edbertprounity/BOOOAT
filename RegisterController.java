@@ -1,9 +1,7 @@
 public class RegisterController {
-    private UserManager userManager;
     private RegisterModel model;
 
-    public RegisterController(UserManager userManager, RegisterModel model) {
-        this.userManager = userManager;
+    public RegisterController(RegisterModel model) {
         this.model = model;
     }
 
@@ -28,11 +26,11 @@ public class RegisterController {
             return false;
         }
 
-        if (userManager.findByUsername(username) != null) {
+        if (model.getUserManager().findByUsername(username) != null) {
             return false;
         }
 
-        userManager.addUser(new Member(name, username, password));
+        model.getUserManager().addUser(new Member(name, username, password));
         model.clear();
         return true;
     }

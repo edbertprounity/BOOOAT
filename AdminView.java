@@ -4,6 +4,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -46,6 +47,9 @@ public class AdminView {
         TextField capField = new TextField();
         capField.setPromptText("Capacity");
 
+        configDoubleField(priceField);
+        configIntField(capField);
+
         HBox addFieldRow = new HBox(10, new Label("Name:"), nameField, new Label("Price:"), priceField, new Label("Capacity:"), capField);
         addFieldRow.setAlignment(Pos.CENTER_LEFT);
 
@@ -66,15 +70,17 @@ public class AdminView {
 
         Button addBtn = new Button("Add Boat");
         addBtn.setOnAction(e -> {
-            BoatType selected = typeGroup.getSelectedToggle() == null
-                ? null : (BoatType) typeGroup.getSelectedToggle().getUserData();
+            BoatType selected = null;
+            if (typeGroup.getSelectedToggle() != null) {
+                selected = (BoatType) typeGroup.getSelectedToggle().getUserData();
+            }
 
-            boolean valid = selected != null
+            boolean filled = selected != null
                 && !nameField.getText().trim().isEmpty()
                 && !priceField.getText().trim().isEmpty()
                 && !capField.getText().trim().isEmpty();
 
-            if (!valid) {
+            if (!filled) {
                 addErrorLabel.setText("Please fill in all fields and select a type.");
                 return;
             }
@@ -97,9 +103,15 @@ public class AdminView {
         Button removeBtn = new Button("Remove Selected Boat");
         removeBtn.setOnAction(e -> {
             Boat selected = boatTable.getSelectionModel().getSelectedItem();
-            if (selected == null) return;
+            if (selected == null) {
+                return;
+            }
             boolean removed = controller.removeBoat(selected);
-            removeErrorLabel.setText(removed ? "" : "Cannot remove: boat has an active rental.");
+            if (removed) {
+                removeErrorLabel.setText("");
+            } else {
+                removeErrorLabel.setText("Cannot remove: boat has an active rental.");
+            }
         });
 
         // --- Rentals ---
@@ -118,7 +130,9 @@ public class AdminView {
         filterRow.setAlignment(Pos.CENTER_LEFT);
 
         filterGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null) return;
+            if (newVal == null) {
+                return;
+            }
             controller.applyRentalFilter(((RadioButton) newVal).getText());
         });
 
@@ -162,11 +176,11 @@ public class AdminView {
         TableColumn<Boat, BoatType> typeCol = new TableColumn<>("Type");
         typeCol.setCellValueFactory(c -> c.getValue().typeProperty());
 
-        TableColumn<Boat, Double> priceCol = new TableColumn<>("Price");
-        priceCol.setCellValueFactory(c -> c.getValue().priceProperty().asObject());
+        TableColumn<Boat, Number> priceCol = new TableColumn<>("Price");
+        priceCol.setCellValueFactory(c -> c.getValue().priceProperty());
 
-        TableColumn<Boat, Integer> capCol = new TableColumn<>("Capacity");
-        capCol.setCellValueFactory(c -> c.getValue().capacityProperty().asObject());
+        TableColumn<Boat, Number> capCol = new TableColumn<>("Capacity");
+        capCol.setCellValueFactory(c -> c.getValue().capacityProperty());
 
         table.getColumns().addAll(nameCol, typeCol, priceCol, capCol);
         return table;
@@ -181,8 +195,8 @@ public class AdminView {
         TableColumn<RentRecord, String> boatCol = new TableColumn<>("Boat");
         boatCol.setCellValueFactory(c -> c.getValue().getBoat().nameProperty());
 
-        TableColumn<RentRecord, Double> priceCol = new TableColumn<>("Paid");
-        priceCol.setCellValueFactory(c -> c.getValue().priceProperty().asObject());
+        TableColumn<RentRecord, Number> priceCol = new TableColumn<>("Paid");
+        priceCol.setCellValueFactory(c -> c.getValue().priceProperty());
 
         table.getColumns().addAll(memberCol, boatCol, priceCol);
         return table;
@@ -194,5 +208,23 @@ public class AdminView {
 
     public Parent asParent() {
         return root;
+    }
+
+    private void configIntField(TextField field) {
+        field.setTextFormatter(new TextFormatter<>((TextFormatter.Change c) -> {
+            if (c.getControlNewText().matches("\\d*")) {
+                return c;
+            }
+            return null;
+        }));
+    }
+
+    private void configDoubleField(TextField field) {
+        field.setTextFormatter(new TextFormatter<>((TextFormatter.Change c) -> {
+            if (c.getControlNewText().matches("\\d*(\\.\\d*)?")) {
+                return c;
+            }
+            return null;
+        }));
     }
 }

@@ -1,15 +1,9 @@
 import java.util.List;
 
 public class MemberController {
-    private BoatManager boatManager;
-    private RentalManager rentalManager;
-    private Member member;
     private MemberModel model;
 
-    public MemberController(BoatManager boatManager, RentalManager rentalManager, Member member, MemberModel model) {
-        this.boatManager = boatManager;
-        this.rentalManager = rentalManager;
-        this.member = member;
+    public MemberController(MemberModel model) {
         this.model = model;
         refreshData();
     }
@@ -23,23 +17,39 @@ public class MemberController {
         applyFilters();
     }
 
-    public void updateMinCapacity(Integer value) {
-        model.minCapacityProperty().set(value);
+    public void updateMinCapacity(String value) {
+        int val = convertStringToInt(value);
+        if (val == 0) {
+            val = -1;
+        }
+        model.minCapacityProperty().set(val);
         applyFilters();
     }
 
-    public void updateMaxCapacity(Integer value) {
-        model.maxCapacityProperty().set(value);
+    public void updateMaxCapacity(String value) {
+        int val = convertStringToInt(value);
+        if (val == 0) {
+            val = -1;
+        }
+        model.maxCapacityProperty().set(val);
         applyFilters();
     }
 
-    public void updateMinPrice(Double value) {
-        model.minPriceProperty().set(value);
+    public void updateMinPrice(String value) {
+        double val = convertStringToDouble(value);
+        if (val == 0.0) {
+            val = -1.0;
+        }
+        model.minPriceProperty().set(val);
         applyFilters();
     }
 
-    public void updateMaxPrice(Double value) {
-        model.maxPriceProperty().set(value);
+    public void updateMaxPrice(String value) {
+        double val = convertStringToDouble(value);
+        if (val == 0.0) {
+            val = -1.0;
+        }
+        model.maxPriceProperty().set(val);
         applyFilters();
     }
 
@@ -54,7 +64,7 @@ public class MemberController {
     }
 
     public void applyFilters() {
-        List<Boat> filtered = boatManager.search(
+        List<Boat> filtered = model.getBoatManager().search(
             model.getSearchKeyword(),
             model.getMinCapacity(), model.getMaxCapacity(),
             model.getFilterType(),
@@ -63,40 +73,88 @@ public class MemberController {
         model.setAvailableBoats(filtered);
     }
 
-    public double getCalculatedPrice(Boat boat, int duration, String discountCode) {
-        if (discountCode == null || discountCode.isEmpty()) {
-            return rentalManager.calculatePrice(boat, duration, member);
+    public void updateRentalDuration(Boat boat, String durationStr) {
+        int duration = convertStringToInt(durationStr);
+        if (duration <= 0) {
+            duration = 1;
         }
-        return rentalManager.calculatePrice(boat, duration, member, discountCode);
+        model.rentalDurationProperty().set(duration);
+        calculateTotal(boat);
     }
 
-    public void executeRental(Boat boat, int duration, String discountCode) {
+    public void applyDiscountCode(Boat boat, String code) {
+        model.appliedDiscountCodeProperty().set(code);
+        calculateTotal(boat);
+    }
+
+    private void calculateTotal(Boat boat) {
+        int duration = model.rentalDurationProperty().get();
+        String code = model.appliedDiscountCodeProperty().get();
+        double price = model.getRentalManager().calculatePrice(boat, duration, model.getMember(), code);
+        model.rentalTotalPriceProperty().set(price);
+    }
+
+    public void executeRental(Boat boat) {
+        int duration = model.rentalDurationProperty().get();
+        String discountCode = model.appliedDiscountCodeProperty().get();
+
         if (discountCode == null || discountCode.isEmpty()) {
-            rentalManager.rentBoat(member, boat, duration);
+            model.getRentalManager().rentBoat(model.getMember(), boat, duration);
         } else {
-            rentalManager.rentBoat(member, boat, duration, discountCode);
+            model.getRentalManager().rentBoat(model.getMember(), boat, duration, discountCode);
         }
-        member.confirmMembership();
+
+        model.getMember().confirmMembership();
         refreshData();
+        model.appliedDiscountCodeProperty().set("");
+        model.rentalDurationProperty().set(1);
     }
 
     public void returnBoat(Boat boat) {
-        if (boat == null) return;
-        rentalManager.returnBoat(member, boat);
+        if (boat == null) {
+            return;
+        }
+        model.getRentalManager().returnBoat(model.getMember(), boat);
         refreshData();
     }
 
     public void updateProfileName(String newName) {
-        member.setName(newName);
+        model.getMember().setName(newName);
         refreshData();
     }
 
-    public void updatePassword(String newPassword) {
-        member.updatePassword(newPassword);
+    public void updatePassword(String p1, String p2) {
+        if (p1 == null || p1.isEmpty() || !p1.equals(p2)) {
+            model.passwordErrorProperty().set("Passwords do not match or are empty.");
+            return;
+        }
+
+        model.getMember().updatePassword(p1);
+        model.passwordErrorProperty().set("");
     }
 
     public void refreshData() {
-        model.setMemberData(member);
-        model.setAvailableBoats(boatManager.findAvailableBoat());
+        model.setMemberData(model.getMember());
+        model.setAvailableBoats(model.getBoatManager().findAvailableBoat());
+    }
+
+    private int convertStringToInt(String s) {
+        if (s == null || s.isEmpty()) {
+            return 0;
+        }
+        if ("-".equals(s)) {
+            return 0;
+        }
+        return Integer.parseInt(s); // Convert string into integer
+    }
+
+    private double convertStringToDouble(String s) {
+        if (s == null || s.isEmpty()) {
+            return 0.0;
+        }
+        if ("-".equals(s)) {
+            return 0.0;
+        }
+        return Double.parseDouble(s);
     }
 }
