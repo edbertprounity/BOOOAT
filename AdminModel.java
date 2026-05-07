@@ -13,6 +13,9 @@ public class AdminModel {
     private final SimpleStringProperty totalRentalsCount = new SimpleStringProperty("0");
     private final SimpleStringProperty activeRentalsCount = new SimpleStringProperty("0");
 
+    public AdminModel() {
+    }
+
     public void setBoatManager(BoatManager boatManager) {
         this.boatManager = boatManager;
     }
@@ -59,7 +62,7 @@ public class AdminModel {
 
     public void updateStats(double revenue, int total, int active) {
         this.totalRevenue.set(String.format("$%.2f", revenue));
-        this.totalRentalsCount.set(String.valueOf(total));
-        this.activeRentalsCount.set(String.valueOf(active));
+        this.totalRentalsCount.set("" + total);
+        this.activeRentalsCount.set("" + active);
     }
 }

@@ -3,6 +3,9 @@ import java.util.List;
 
 public class RentalManager {
 
+    public RentalManager() {
+    }
+
     private List<RentRecord> records = new ArrayList<>();
 
     public void rentBoat(Member member, Boat boat, int duration) {

@@ -6,6 +6,9 @@ public class RegisterModel {
     private final SimpleStringProperty username = new SimpleStringProperty("");
     private final SimpleStringProperty password = new SimpleStringProperty("");
 
+    public RegisterModel() {
+    }
+
     public void setUserManager(UserManager userManager) {
         this.userManager = userManager;
     }

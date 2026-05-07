@@ -123,13 +123,13 @@ public class MemberController {
         refreshData();
     }
 
-    public void updatePassword(String p1, String p2) {
-        if (p1 == null || p1.isEmpty() || !p1.equals(p2)) {
+    public void updatePassword(String password, String confirmPassword) {
+        if (password == null || password.isEmpty() || !password.equals(confirmPassword)) {
             model.passwordErrorProperty().set("Passwords do not match or are empty.");
             return;
         }
 
-        model.getMember().updatePassword(p1);
+        model.getMember().updatePassword(password);
         model.passwordErrorProperty().set("");
     }
 

@@ -20,33 +20,46 @@ public class LoginView {
     }
 
     private void initView() {
-        this.root = new VBox(10);
+        // Declarations
+        Label title;
+        Label usernameLabel;
+        TextField usernameField;
+        HBox usernameRow;
+        Label passwordLabel;
+        TextField passwordField;
+        HBox passwordRow;
+        HBox buttonRow;
+
+        // Initializations
+        this.root = new VBox(15);
+        title = new Label("BOOOAT Login");
+        usernameLabel = new Label("Username:");
+        usernameField = new TextField();
+        usernameField.setPromptText("Enter your username");
+        usernameRow = new HBox(10, usernameLabel, usernameField);
+
+        passwordLabel = new Label("Password:");
+        passwordField = new TextField();
+        passwordField.setPromptText("Enter your password");
+        passwordRow = new HBox(10, passwordLabel, passwordField);
+
+        this.loginButton = new Button("Login");
+        this.registerButton = new Button("Register");
+        buttonRow = new HBox(10, loginButton, registerButton);
+
+        // Layout Configuration
         root.setAlignment(Pos.CENTER);
-
-        Label title = new Label("BOOOAT Login");
-
-        TextField usernameField = new TextField();
-
-        TextField passwordField = new TextField();
-
-        HBox usernameRow = new HBox(10, new Label("Username:"), usernameField);
         usernameRow.setAlignment(Pos.CENTER);
-
-        HBox passwordRow = new HBox(10, new Label("Password:"), passwordField);
         passwordRow.setAlignment(Pos.CENTER);
+        buttonRow.setAlignment(Pos.CENTER);
 
+        // Listeners
         usernameField.textProperty().addListener((obs, oldVal, newVal) -> {
             controller.updateUsername(newVal);
         });
         passwordField.textProperty().addListener((obs, oldVal, newVal) -> {
             controller.updatePassword(newVal);
         });
-
-        this.loginButton = new Button("Login");
-        this.registerButton = new Button("Register");
-
-        HBox buttonRow = new HBox(10, loginButton, registerButton);
-        buttonRow.setAlignment(Pos.CENTER);
 
         root.getChildren().addAll(
             title,

@@ -21,24 +21,51 @@ public class RegisterView {
     }
 
     private void initView() {
-        this.root = new VBox(10);
+        // Declarations
+        Label title;
+        Label nameLabel;
+        TextField nameField;
+        HBox nameRow;
+        Label usernameLabel;
+        TextField usernameField;
+        HBox usernameRow;
+        Label passwordLabel;
+        TextField passwordField;
+        HBox passwordRow;
+        HBox buttonRow;
+
+        // Initializations
+        this.root = new VBox(15);
+        title = new Label("Join BOOOAT");
+        
+        nameLabel = new Label("Full Name:");
+        nameField = new TextField();
+        nameField.setPromptText("Enter full name");
+        nameRow = new HBox(10, nameLabel, nameField);
+
+        usernameLabel = new Label("Username:");
+        usernameField = new TextField();
+        usernameField.setPromptText("Enter username");
+        usernameRow = new HBox(10, usernameLabel, usernameField);
+
+        passwordLabel = new Label("Password:");
+        passwordField = new TextField();
+        passwordField.setPromptText("Enter password");
+        passwordRow = new HBox(10, passwordLabel, passwordField);
+
+        this.errorLabel = new Label("");
+        this.registerButton = new Button("Create Account");
+        this.backButton = new Button("Back to Login");
+        buttonRow = new HBox(10, registerButton, backButton);
+
+        // Layout Configuration
         root.setAlignment(Pos.CENTER);
-
-        Label title = new Label("Join BOOOAT");
-
-        TextField nameField = new TextField();
-        TextField usernameField = new TextField();
-        TextField passwordField = new TextField();
-
-        HBox nameRow = new HBox(10, new Label("Full Name:"), nameField);
         nameRow.setAlignment(Pos.CENTER);
-
-        HBox usernameRow = new HBox(10, new Label("Username:"), usernameField);
         usernameRow.setAlignment(Pos.CENTER);
-
-        HBox passwordRow = new HBox(10, new Label("Password:"), passwordField);
         passwordRow.setAlignment(Pos.CENTER);
+        buttonRow.setAlignment(Pos.CENTER);
 
+        // Listeners
         nameField.textProperty().addListener((obs, oldVal, newVal) -> {
             controller.updateFullName(newVal);
         });
@@ -48,12 +75,6 @@ public class RegisterView {
         passwordField.textProperty().addListener((obs, oldVal, newVal) -> {
             controller.updatePassword(newVal);
         });
-
-        this.errorLabel = new Label("");
-
-        this.registerButton = new Button("Create Account");
-        this.backButton = new Button("Back to Login");
-
         registerButton.setOnAction(e -> {
             boolean success = controller.processRegistration();
             if (success) {
@@ -62,9 +83,6 @@ public class RegisterView {
                 errorLabel.setText("Registration failed. Check all fields or username already exists.");
             }
         });
-
-        HBox buttonRow = new HBox(10, registerButton, backButton);
-        buttonRow.setAlignment(Pos.CENTER);
 
         root.getChildren().addAll(
             title,

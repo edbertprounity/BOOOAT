@@ -4,6 +4,9 @@ import java.util.List;
 public class BoatManager {
     private List<Boat> boats = new ArrayList<>();
 
+    public BoatManager() {
+    }
+
     public void addBoat(Boat boat) {
         boats.add(boat);
     }

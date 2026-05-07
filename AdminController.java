@@ -94,12 +94,13 @@ public class AdminController {
 
         double revenue = 0;
         int active = 0;
-        for (RentRecord r : records) {
-            revenue += r.getPrice();
-            if (r.isActive()) {
+        for (RentRecord record : records) {
+            revenue += record.getPrice();
+            if (record.isActive()) {
                 active++;
             }
         }
-        model.updateStats(revenue, records.size(), active);
+        int totalRentals = records.size();
+        model.updateStats(revenue, totalRentals, active);
     }
 }

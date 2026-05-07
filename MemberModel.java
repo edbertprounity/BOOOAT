@@ -162,7 +162,7 @@ public class MemberModel {
     public void setMemberData(Member member) {
         this.name.set(member.getName());
         this.username.set(member.getUsername());
-        this.points.set(String.valueOf(member.getPoint()));
+        this.points.set("" + member.getPoint());
         this.tier.set(member.getMembership().toString());
         this.discount.set(String.format("%.0f%%", member.discount() * 100));
         this.currentRentals.setAll(member.getCurrentRental());

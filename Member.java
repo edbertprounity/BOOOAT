@@ -65,6 +65,7 @@ public class Member extends User {
 
     public void setName(String name) {
         this.name = name;
+        this.nameProperty().set(name);
     }
 
     @Override

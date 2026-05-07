@@ -1,4 +1,3 @@
-import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -27,48 +26,125 @@ public class AdminView {
     }
 
     private void initView() {
-        this.root = new VBox(10);
-        root.setAlignment(Pos.CENTER_LEFT);
+        // Declarations
+        Label panelLabel;
+        HBox header;
+        Label addTitle;
+        Label nameLabel;
+        TextField nameField;
+        Label priceLabel;
+        TextField priceField;
+        Label capLabel;
+        TextField capField;
+        HBox addFieldRow;
+        Label typeLabel;
+        ToggleGroup typeGroup;
+        HBox typeBox;
+        HBox typeRow;
+        Label addErrorLabel;
+        Button addBtn;
+        Label fleetLabel;
+        Label removeErrorLabel;
+        Button removeBtn;
+        Label rentalLabel;
+        Label filterLabel;
+        ToggleGroup filterGroup;
+        RadioButton allBtn;
+        RadioButton activeBtn;
+        RadioButton completedBtn;
+        HBox filterRow;
+        Label statsLabel;
+        Label revenueLabel;
+        Label revenueValue;
+        Label totalRentalsLabel;
+        Label totalValue;
+        Label activeRentalsLabel;
+        Label activeValue;
+        HBox revBox;
+        HBox totalBox;
+        HBox activeBox;
+        HBox statsRow;
 
-        // --- Header ---
+        // Initializations
+        this.root = new VBox(15);
         this.logoutBtn = new Button("Logout");
-        HBox header = new HBox(10, new Label("Admin Control Panel"), logoutBtn);
-        header.setAlignment(Pos.CENTER_LEFT);
-
-        // --- Add Boat ---
-        Label addTitle = new Label("Add New Boat");
-
-        TextField nameField = new TextField();
+        panelLabel = new Label("Admin Control Panel");
+        header = new HBox(10, panelLabel, logoutBtn);
+        
+        addTitle = new Label("Add New Boat");
+        nameLabel = new Label("Name:");
+        nameField = new TextField();
         nameField.setPromptText("Boat name");
-
-        TextField priceField = new TextField();
+        priceLabel = new Label("Price:");
+        priceField = new TextField();
         priceField.setPromptText("Price per day");
-
-        TextField capField = new TextField();
+        capLabel = new Label("Capacity:");
+        capField = new TextField();
         capField.setPromptText("Capacity");
-
         configDoubleField(priceField);
         configIntField(capField);
+        addFieldRow = new HBox(10, nameLabel, nameField, priceLabel, priceField, capLabel, capField);
 
-        HBox addFieldRow = new HBox(10, new Label("Name:"), nameField, new Label("Price:"), priceField, new Label("Capacity:"), capField);
-        addFieldRow.setAlignment(Pos.CENTER_LEFT);
-
-        ToggleGroup typeGroup = new ToggleGroup();
-        HBox typeBox = new HBox(10);
-        typeBox.setAlignment(Pos.CENTER_LEFT);
+        typeLabel = new Label("Type:");
+        typeGroup = new ToggleGroup();
+        typeBox = new HBox(10);
         for (BoatType bt : BoatType.values()) {
             RadioButton rb = new RadioButton(bt.name());
             rb.setToggleGroup(typeGroup);
             rb.setUserData(bt);
             typeBox.getChildren().add(rb);
         }
+        typeRow = new HBox(10, typeLabel, typeBox);
 
-        HBox typeRow = new HBox(10, new Label("Type:"), typeBox);
+        addErrorLabel = new Label("");
+        addBtn = new Button("Add Boat");
+
+        fleetLabel = new Label("Fleet Management");
+        this.boatTable = createBoatTable();
+        removeErrorLabel = new Label("");
+        removeBtn = new Button("Remove Selected Boat");
+
+        rentalLabel = new Label("Rentals");
+        filterLabel = new Label("Filter:");
+        filterGroup = new ToggleGroup();
+        allBtn = new RadioButton("All");
+        activeBtn = new RadioButton("Active");
+        completedBtn = new RadioButton("Completed");
+        allBtn.setToggleGroup(filterGroup);
+        activeBtn.setToggleGroup(filterGroup);
+        completedBtn.setToggleGroup(filterGroup);
+        filterRow = new HBox(10, filterLabel, allBtn, activeBtn, completedBtn);
+
+        statsLabel = new Label("Sales Performance");
+        revenueLabel = new Label("Revenue:");
+        revenueValue = new Label();
+        totalRentalsLabel = new Label("Total Rentals:");
+        totalValue = new Label();
+        activeRentalsLabel = new Label("Active:");
+        activeValue = new Label();
+        revBox = new HBox(5, revenueLabel, revenueValue);
+        totalBox = new HBox(5, totalRentalsLabel, totalValue);
+        activeBox = new HBox(5, activeRentalsLabel, activeValue);
+        statsRow = new HBox(20, revBox, totalBox, activeBox);
+
+        // Alignment and Binding
+        root.setAlignment(Pos.TOP_LEFT);
+        header.setAlignment(Pos.CENTER_LEFT);
+        addFieldRow.setAlignment(Pos.CENTER_LEFT);
+        typeBox.setAlignment(Pos.CENTER_LEFT);
         typeRow.setAlignment(Pos.CENTER_LEFT);
+        filterRow.setAlignment(Pos.CENTER_LEFT);
+        statsRow.setAlignment(Pos.CENTER_LEFT);
 
-        Label addErrorLabel = new Label("");
+        this.boatTable.setItems(model.getAllBoats());
+        this.rentalTable = createRentalTable();
+        this.rentalTable.setItems(model.getAllRentals());
 
-        Button addBtn = new Button("Add Boat");
+        revenueValue.textProperty().bind(model.totalRevenueProperty());
+        totalValue.textProperty().bind(model.totalRentalsCountProperty());
+        activeValue.textProperty().bind(model.activeRentalsCountProperty());
+
+        // Event Handlers
         addBtn.setOnAction(e -> {
             BoatType selected = null;
             if (typeGroup.getSelectedToggle() != null) {
@@ -86,21 +162,13 @@ public class AdminView {
             }
 
             controller.addBoat(nameField.getText(), priceField.getText(), selected, capField.getText());
-            nameField.clear();
-            priceField.clear();
-            capField.clear();
+            nameField.setText("");
+            priceField.setText("");
+            capField.setText("");
             typeGroup.selectToggle(null);
             addErrorLabel.setText("");
         });
-
-        // --- Fleet Management ---
-        Label fleetLabel = new Label("Fleet Management");
-        this.boatTable = createBoatTable();
-        this.boatTable.setItems(model.getAllBoats());
-
-        Label removeErrorLabel = new Label("");
-
-        Button removeBtn = new Button("Remove Selected Boat");
+        
         removeBtn.setOnAction(e -> {
             Boat selected = boatTable.getSelectionModel().getSelectedItem();
             if (selected == null) {
@@ -113,50 +181,13 @@ public class AdminView {
                 removeErrorLabel.setText("Cannot remove: boat has an active rental.");
             }
         });
-
-        // --- Rentals ---
-        Label rentalLabel = new Label("Rentals");
-
-        ToggleGroup filterGroup = new ToggleGroup();
-        RadioButton allBtn = new RadioButton("All");
-        RadioButton activeBtn = new RadioButton("Active");
-        RadioButton completedBtn = new RadioButton("Completed");
-        allBtn.setToggleGroup(filterGroup);
-        activeBtn.setToggleGroup(filterGroup);
-        completedBtn.setToggleGroup(filterGroup);
-        allBtn.setSelected(true);
-
-        HBox filterRow = new HBox(10, new Label("Filter:"), allBtn, activeBtn, completedBtn);
-        filterRow.setAlignment(Pos.CENTER_LEFT);
-
+        
         filterGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null) {
                 return;
             }
             controller.applyRentalFilter(((RadioButton) newVal).getText());
         });
-
-        this.rentalTable = createRentalTable();
-        this.rentalTable.setItems(model.getAllRentals());
-
-        // --- Stats ---
-        Label statsLabel = new Label("Sales Performance");
-
-        Label revenueLabel = new Label();
-        revenueLabel.textProperty().bind(model.totalRevenueProperty());
-
-        Label totalCountLabel = new Label();
-        totalCountLabel.textProperty().bind(model.totalRentalsCountProperty());
-
-        Label activeCountLabel = new Label();
-        activeCountLabel.textProperty().bind(model.activeRentalsCountProperty());
-
-        HBox statsRow = new HBox(20,
-            new HBox(5, new Label("Revenue:"), revenueLabel),
-            new HBox(5, new Label("Total Rentals:"), totalCountLabel),
-            new HBox(5, new Label("Active:"), activeCountLabel)
-        );
-        statsRow.setAlignment(Pos.CENTER_LEFT);
 
         root.getChildren().addAll(
             header,
@@ -190,7 +221,7 @@ public class AdminView {
         TableView<RentRecord> table = new TableView<>();
 
         TableColumn<RentRecord, String> memberCol = new TableColumn<>("Member");
-        memberCol.setCellValueFactory(c -> new SimpleStringProperty(c.getValue().getMember().getUsername()));
+        memberCol.setCellValueFactory(c -> c.getValue().getMember().usernameProperty());
 
         TableColumn<RentRecord, String> boatCol = new TableColumn<>("Boat");
         boatCol.setCellValueFactory(c -> c.getValue().getBoat().nameProperty());

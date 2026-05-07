@@ -28,61 +28,103 @@ public class MemberView {
     }
 
     private void initView() {
+        // Declarations
+        Label welcomeLabel;
+        HBox header;
+        VBox filterVBox;
+        Label searchLabel;
+        TextField searchField;
+        HBox searchRow;
+        Label capRangeLabel;
+        TextField minCapField;
+        TextField maxCapField;
+        HBox capRow;
+        Label priceRangeLabel;
+        TextField minPriceField;
+        TextField maxPriceField;
+        HBox priceRow;
+        Label typeLabel;
+        ToggleGroup typeGroup;
+        HBox typeBox;
+        Button clearBtn;
+        VBox tableVBox;
+        Label availableBoatsLabel;
+        TableView<Boat> availableBoatsTable;
+        Button rentBtn;
+
+        // Initializations
         this.root = new VBox(20);
-        root.setAlignment(Pos.TOP_CENTER);
-
-        // --- 1. Member details header (HBox) ---
-        Label welcomeLabel = new Label();
-        welcomeLabel.textProperty().bind(model.welcomeTextProperty());
-
+        welcomeLabel = new Label();
         this.detailsBtn = new Button("Member Details");
         this.logoutBtn = new Button("Logout");
-        
-        HBox header = new HBox(10, welcomeLabel, detailsBtn, logoutBtn);
-        header.setAlignment(Pos.CENTER_LEFT);
+        header = new HBox(10, welcomeLabel, detailsBtn, logoutBtn);
 
-        // --- 2. Main content area (HBox) ---
-        HBox contentHBox = new HBox(20);
+        filterVBox = new VBox(10);
+        searchLabel = new Label("Search Name:");
+        searchField = new TextField();
+        searchField.setPromptText("Enter boat name or keyword");
+        searchRow = new HBox(5, searchLabel, searchField);
 
-        // Left VBox: Search and Filters
-        VBox filterVBox = new VBox(10);
-        filterVBox.setAlignment(Pos.TOP_LEFT);
+        capRangeLabel = new Label("Capacity (Min/Max):");
+        minCapField = new TextField();
+        maxCapField = new TextField();
+        minCapField.setPromptText("Min");
+        maxCapField.setPromptText("Max");
+        capRow = new HBox(5, minCapField, maxCapField);
 
-        TextField searchField = new TextField();
-        searchField.textProperty().addListener((obs, oldVal, newVal) -> {
-            controller.updateSearch(newVal);
-        });
+        priceRangeLabel = new Label("Price (Min/Max):");
+        minPriceField = new TextField();
+        maxPriceField = new TextField();
+        minPriceField.setPromptText("Min");
+        maxPriceField.setPromptText("Max");
+        priceRow = new HBox(5, minPriceField, maxPriceField);
 
-        TextField minCapField = new TextField();
-        TextField maxCapField = new TextField();
-        configIntField(minCapField);
-        configIntField(maxCapField);
-        minCapField.textProperty().addListener((obs, oldVal, newVal) -> {
-            controller.updateMinCapacity(newVal);
-        });
-        maxCapField.textProperty().addListener((obs, oldVal, newVal) -> {
-            controller.updateMaxCapacity(newVal);
-        });
-
-        TextField minPriceField = new TextField();
-        TextField maxPriceField = new TextField();
-        configDoubleField(minPriceField);
-        configDoubleField(maxPriceField);
-        minPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
-            controller.updateMinPrice(newVal);
-        });
-        maxPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
-            controller.updateMaxPrice(newVal);
-        });
-
-        ToggleGroup typeGroup = new ToggleGroup();
-        VBox typeBox = new VBox(5);
+        typeLabel = new Label("Boat Type:");
+        typeGroup = new ToggleGroup();
+        typeBox = new HBox(5);
         for (BoatType bt : BoatType.values()) {
             RadioButton rb = new RadioButton(bt.name());
             rb.setToggleGroup(typeGroup);
             rb.setUserData(bt);
             typeBox.getChildren().add(rb);
         }
+        clearBtn = new Button("Clear Filters");
+
+        tableVBox = new VBox(10);
+        availableBoatsLabel = new Label("Available Boats:");
+        availableBoatsTable = createBoatTable();
+        rentBtn = new Button("Rent Selected Boat");
+
+        // Configuration and Layout
+        root.setAlignment(Pos.TOP_LEFT);
+        header.setAlignment(Pos.CENTER_LEFT);
+        filterVBox.setAlignment(Pos.TOP_LEFT);
+        searchRow.setAlignment(Pos.CENTER_LEFT);
+        tableVBox.setAlignment(Pos.TOP_LEFT);
+
+        welcomeLabel.textProperty().bind(model.welcomeTextProperty());
+        configIntField(minCapField);
+        configIntField(maxCapField);
+        configDoubleField(minPriceField);
+        configDoubleField(maxPriceField);
+        availableBoatsTable.setItems(model.getAvailableBoats());
+
+        // Event Listeners
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> {
+            controller.updateSearch(newVal);
+        });
+        minCapField.textProperty().addListener((obs, oldVal, newVal) -> {
+            controller.updateMinCapacity(newVal);
+        });
+        maxCapField.textProperty().addListener((obs, oldVal, newVal) -> {
+            controller.updateMaxCapacity(newVal);
+        });
+        minPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
+            controller.updateMinPrice(newVal);
+        });
+        maxPriceField.textProperty().addListener((obs, oldVal, newVal) -> {
+            controller.updateMaxPrice(newVal);
+        });
         typeGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
             BoatType type = null;
             if (newVal != null) {
@@ -90,47 +132,33 @@ public class MemberView {
             }
             controller.updateFilterType(type);
         });
-
-        Button clearBtn = new Button("Clear Filters");
         clearBtn.setOnAction(e -> {
-            searchField.clear();
-            minCapField.clear();
-            maxCapField.clear();
-            minPriceField.clear();
-            maxPriceField.clear();
+            searchField.setText("");
+            minCapField.setText("");
+            maxCapField.setText("");
+            minPriceField.setText("");
+            maxPriceField.setText("");
             typeGroup.selectToggle(null);
             controller.clearFilters();
         });
 
         filterVBox.getChildren().addAll(
-            new Label("Search Name:"), searchField,
-            new Label("Capacity (Min/Max):"), new HBox(5, minCapField, maxCapField),
-            new Label("Price (Min/Max):"), new HBox(5, minPriceField, maxPriceField),
-            new Label("Boat Type:"), typeBox,
+            searchRow,
+            capRangeLabel, capRow,
+            priceRangeLabel, priceRow,
+            typeLabel, typeBox,
             clearBtn
         );
 
-        // Right VBox: Table area
-        VBox tableVBox = new VBox(10);
-        tableVBox.setAlignment(Pos.TOP_LEFT);
-
-        TableView<Boat> availTable = createBoatTable();
-        availTable.setItems(model.getAvailableBoats());
-
-        Button rentBtn = new Button("Rent Selected Boat");
         rentBtn.setOnAction(e -> {
-            Boat selected = availTable.getSelectionModel().getSelectedItem();
+            Boat selected = availableBoatsTable.getSelectionModel().getSelectedItem();
             if (selected != null) {
                 showRentDialog(selected);
             }
         });
-
-        tableVBox.getChildren().addAll(new Label("Available Boats:"), availTable, rentBtn);
-
-        contentHBox.getChildren().addAll(filterVBox, tableVBox);
+        tableVBox.getChildren().addAll(availableBoatsLabel, availableBoatsTable, rentBtn);
         detailsBtn.setOnAction(e -> showDetailsWindow());
-
-        root.getChildren().addAll(header, contentHBox);
+        root.getChildren().addAll(header, filterVBox, tableVBox);
     }
 
     private void showRentDialog(Boat boat) {
@@ -142,10 +170,18 @@ public class MemberView {
         VBox layout = new VBox(10);
         layout.setAlignment(Pos.CENTER_LEFT);
 
-        HBox boatRow = new HBox(5, new Label("Boat:"), new Label(boat.getName()));
+        Label boatNameLabel = new Label();
+        boatNameLabel.textProperty().bind(boat.nameProperty());
+        HBox boatRow = new HBox(5, new Label("Boat:"), boatNameLabel);
         boatRow.setAlignment(Pos.CENTER_LEFT);
 
-        HBox detailRow = new HBox(5, new Label("Type:"), new Label(boat.getType().toString()), new Label("Capacity:"), new Label(String.valueOf(boat.getCapacity())));
+        Label typeValue = new Label();
+        typeValue.textProperty().bind(boat.typeProperty().asString());
+
+        Label capacityValue = new Label();
+        capacityValue.textProperty().bind(boat.capacityProperty().asString());
+
+        HBox detailRow = new HBox(5, new Label("Type:"), typeValue, new Label("Capacity:"), capacityValue);
         detailRow.setAlignment(Pos.CENTER_LEFT);
 
         TextField durationField = new TextField("1");
@@ -153,9 +189,11 @@ public class MemberView {
         durationRow.setAlignment(Pos.CENTER_LEFT);
 
         TextField codeField = new TextField();
+        codeField.setPromptText("Enter discount code");
         configIntField(durationField);
+        durationField.setPromptText("Duration in days"); // Added prompt text for durationField
 
-        Button applyCodeBtn = new Button("Apply Code");
+        Button applyCodeBtn = new Button("Apply Code"); // This button is fine as is
         HBox codeRow = new HBox(10, new Label("Discount Code:"), codeField, applyCodeBtn);
         codeRow.setAlignment(Pos.CENTER_LEFT);
 
@@ -225,6 +263,7 @@ public class MemberView {
 
         // --- Update name ---
         TextField nameField = new TextField(model.nameProperty().get());
+        nameField.setPromptText("Enter new name");
         Button saveNameBtn = new Button("Save Name");
         saveNameBtn.setOnAction(e -> controller.updateProfileName(nameField.getText()));
 
@@ -243,7 +282,8 @@ public class MemberView {
         savePassBtn.setOnAction(e -> {
             controller.updatePassword(newPassField.getText(), confirmPassField.getText());
             if (model.passwordErrorProperty().get().isEmpty()) {
-                newPassField.clear(); confirmPassField.clear();
+                newPassField.setText(""); 
+                confirmPassField.setText("");
             }
         });
 

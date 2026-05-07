@@ -5,6 +5,9 @@ public class LoginModel {
     private final SimpleStringProperty username = new SimpleStringProperty("");
     private final SimpleStringProperty password = new SimpleStringProperty("");
 
+    public LoginModel() {
+    }
+
     public void setUserManager(UserManager userManager) {
         this.userManager = userManager;
     }
