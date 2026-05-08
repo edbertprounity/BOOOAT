@@ -25,12 +25,12 @@ public class Main extends Application {
         LoginModel loginModel = new LoginModel();
         loginModel.setUserManager(userManager);
         LoginController loginController = new LoginController(loginModel);
-        LoginView loginView = new LoginView(loginController, loginModel);
+        LoginView loginView = new LoginView(loginController);
 
         RegisterModel registerModel = new RegisterModel();
         registerModel.setUserManager(userManager);
         RegisterController registerController = new RegisterController(registerModel);
-        RegisterView registerView = new RegisterView(registerController, registerModel);
+        RegisterView registerView = new RegisterView(registerController);
 
         // --- 3. Scene Initialization ---
         Scene mainScene = new Scene(loginView.asParent(), 800, 700);

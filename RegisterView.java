@@ -9,54 +9,34 @@ import javafx.scene.layout.VBox;
 public class RegisterView {
     private VBox root;
     private RegisterController controller;
-    private RegisterModel model;
     private Button registerButton;
     private Button backButton;
     private Label errorLabel;
 
-    public RegisterView(RegisterController controller, RegisterModel model) {
+    public RegisterView(RegisterController controller) {
         this.controller = controller;
-        this.model = model;
         initView();
     }
 
     private void initView() {
-        // Declarations
-        Label title;
-        Label nameLabel;
-        TextField nameField;
-        HBox nameRow;
-        Label usernameLabel;
-        TextField usernameField;
-        HBox usernameRow;
-        Label passwordLabel;
-        TextField passwordField;
-        HBox passwordRow;
-        HBox buttonRow;
-
-        // Initializations
         this.root = new VBox(15);
-        title = new Label("Join BOOOAT");
         
-        nameLabel = new Label("Full Name:");
-        nameField = new TextField();
+        TextField nameField = new TextField();
         nameField.setPromptText("Enter full name");
-        nameRow = new HBox(10, nameLabel, nameField);
+        HBox nameRow = new HBox(10, new Label("Full Name:"), nameField);
 
-        usernameLabel = new Label("Username:");
-        usernameField = new TextField();
+        TextField usernameField = new TextField();
         usernameField.setPromptText("Enter username");
-        usernameRow = new HBox(10, usernameLabel, usernameField);
+        HBox usernameRow = new HBox(10, new Label("Username:"), usernameField);
 
-        passwordLabel = new Label("Password:");
-        passwordField = new TextField();
+        TextField passwordField = new TextField();
         passwordField.setPromptText("Enter password");
-        passwordRow = new HBox(10, passwordLabel, passwordField);
+        HBox passwordRow = new HBox(10, new Label("Password:"), passwordField);
 
         this.errorLabel = new Label("");
         this.registerButton = new Button("Create Account");
         this.backButton = new Button("Back to Login");
-        buttonRow = new HBox(10, registerButton, backButton);
+        HBox buttonRow = new HBox(10, registerButton, backButton);
 
         // Layout Configuration
         root.setAlignment(Pos.CENTER);
@@ -85,7 +65,7 @@ public class RegisterView {
         });
 
         root.getChildren().addAll(
-            title,
+            new Label("Join BOOOAT"),
             nameRow,
             usernameRow,
             passwordRow,

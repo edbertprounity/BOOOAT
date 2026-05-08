@@ -9,43 +9,28 @@ import javafx.scene.layout.VBox;
 public class LoginView {
     private VBox root;
     private LoginController controller;
-    private LoginModel model;
     private Button loginButton;
     private Button registerButton;
 
-    public LoginView(LoginController controller, LoginModel model) {
+    public LoginView(LoginController controller) {
         this.controller = controller;
-        this.model = model;
         initView();
     }
 
     private void initView() {
-        // Declarations
-        Label title;
-        Label usernameLabel;
-        TextField usernameField;
-        HBox usernameRow;
-        Label passwordLabel;
-        TextField passwordField;
-        HBox passwordRow;
-        HBox buttonRow;
-
-        // Initializations
         this.root = new VBox(15);
-        title = new Label("BOOOAT Login");
-        usernameLabel = new Label("Username:");
-        usernameField = new TextField();
+        
+        TextField usernameField = new TextField();
         usernameField.setPromptText("Enter your username");
-        usernameRow = new HBox(10, usernameLabel, usernameField);
+        HBox usernameRow = new HBox(10, new Label("Username:"), usernameField);
 
-        passwordLabel = new Label("Password:");
-        passwordField = new TextField();
+        TextField passwordField = new TextField();
         passwordField.setPromptText("Enter your password");
-        passwordRow = new HBox(10, passwordLabel, passwordField);
+        HBox passwordRow = new HBox(10, new Label("Password:"), passwordField);
 
         this.loginButton = new Button("Login");
         this.registerButton = new Button("Register");
-        buttonRow = new HBox(10, loginButton, registerButton);
+        HBox buttonRow = new HBox(10, loginButton, registerButton);
 
         // Layout Configuration
         root.setAlignment(Pos.CENTER);
@@ -62,7 +47,7 @@ public class LoginView {
         });
 
         root.getChildren().addAll(
-            title,
+            new Label("BOOOAT Login"),
             usernameRow,
             passwordRow,
             buttonRow
