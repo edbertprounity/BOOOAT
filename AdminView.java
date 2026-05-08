@@ -26,106 +26,54 @@ public class AdminView {
     }
 
     private void initView() {
-        // Declarations
-        Label panelLabel;
-        HBox header;
-        Label addTitle;
-        Label nameLabel;
-        TextField nameField;
-        Label priceLabel;
-        TextField priceField;
-        Label capLabel;
-        TextField capField;
-        HBox addFieldRow;
-        Label typeLabel;
-        ToggleGroup typeGroup;
-        HBox typeBox;
-        HBox typeRow;
-        Label addErrorLabel;
-        Button addBtn;
-        Label fleetLabel;
-        Label removeErrorLabel;
-        Button removeBtn;
-        Label rentalLabel;
-        Label filterLabel;
-        ToggleGroup filterGroup;
-        RadioButton allBtn;
-        RadioButton activeBtn;
-        RadioButton completedBtn;
-        HBox filterRow;
-        Label statsLabel;
-        Label revenueLabel;
-        Label revenueValue;
-        Label totalRentalsLabel;
-        Label totalValue;
-        Label activeRentalsLabel;
-        Label activeValue;
-        HBox revBox;
-        HBox totalBox;
-        HBox activeBox;
-        HBox statsRow;
-
-        // Initializations
         this.root = new VBox(15);
         this.logoutBtn = new Button("Logout");
-        panelLabel = new Label("Admin Control Panel");
-        header = new HBox(10, panelLabel, logoutBtn);
+        HBox header = new HBox(10, new Label("Admin Control Panel"), logoutBtn);
         
-        addTitle = new Label("Add New Boat");
-        nameLabel = new Label("Name:");
-        nameField = new TextField();
+        TextField nameField = new TextField();
         nameField.setPromptText("Boat name");
-        priceLabel = new Label("Price:");
-        priceField = new TextField();
+        TextField priceField = new TextField();
         priceField.setPromptText("Price per day");
-        capLabel = new Label("Capacity:");
-        capField = new TextField();
+        TextField capField = new TextField();
         capField.setPromptText("Capacity");
         configDoubleField(priceField);
         configIntField(capField);
-        addFieldRow = new HBox(10, nameLabel, nameField, priceLabel, priceField, capLabel, capField);
+        HBox addFieldRow = new HBox(10, new Label("Name:"), nameField, new Label("Price:"), priceField, new Label("Capacity:"), capField);
 
-        typeLabel = new Label("Type:");
-        typeGroup = new ToggleGroup();
-        typeBox = new HBox(10);
+        ToggleGroup typeGroup = new ToggleGroup();
+        HBox typeBox = new HBox(10);
         for (BoatType bt : BoatType.values()) {
             RadioButton rb = new RadioButton(bt.name());
             rb.setToggleGroup(typeGroup);
             rb.setUserData(bt);
             typeBox.getChildren().add(rb);
         }
-        typeRow = new HBox(10, typeLabel, typeBox);
+        HBox typeRow = new HBox(10, new Label("Type:"), typeBox);
 
-        addErrorLabel = new Label("");
-        addBtn = new Button("Add Boat");
+        Label addErrorLabel = new Label("");
+        Button addBtn = new Button("Add Boat");
 
-        fleetLabel = new Label("Fleet Management");
         this.boatTable = createBoatTable();
-        removeErrorLabel = new Label("");
-        removeBtn = new Button("Remove Selected Boat");
+        Label removeErrorLabel = new Label("");
+        Button removeBtn = new Button("Remove Selected Boat");
 
-        rentalLabel = new Label("Rentals");
-        filterLabel = new Label("Filter:");
-        filterGroup = new ToggleGroup();
-        allBtn = new RadioButton("All");
-        activeBtn = new RadioButton("Active");
-        completedBtn = new RadioButton("Completed");
+        ToggleGroup filterGroup = new ToggleGroup();
+        RadioButton allBtn = new RadioButton("All");
+        RadioButton activeBtn = new RadioButton("Active");
+        RadioButton completedBtn = new RadioButton("Completed");
         allBtn.setToggleGroup(filterGroup);
         activeBtn.setToggleGroup(filterGroup);
         completedBtn.setToggleGroup(filterGroup);
-        filterRow = new HBox(10, filterLabel, allBtn, activeBtn, completedBtn);
+        HBox filterRow = new HBox(10, new Label("Filter:"), allBtn, activeBtn, completedBtn);
 
-        statsLabel = new Label("Sales Performance");
-        revenueLabel = new Label("Revenue:");
-        revenueValue = new Label();
-        totalRentalsLabel = new Label("Total Rentals:");
-        totalValue = new Label();
-        activeRentalsLabel = new Label("Active:");
-        activeValue = new Label();
-        revBox = new HBox(5, revenueLabel, revenueValue);
-        totalBox = new HBox(5, totalRentalsLabel, totalValue);
-        activeBox = new HBox(5, activeRentalsLabel, activeValue);
-        statsRow = new HBox(20, revBox, totalBox, activeBox);
+        Label revenueValue = new Label();
+        Label totalValue = new Label();
+        Label activeValue = new Label();
+        HBox statsRow = new HBox(20, 
+            new HBox(5, new Label("Revenue:"), revenueValue),
+            new HBox(5, new Label("Total Rentals:"), totalValue),
+            new HBox(5, new Label("Active:"), activeValue)
+        );
 
         // Alignment and Binding
         root.setAlignment(Pos.TOP_LEFT);
@@ -191,10 +139,10 @@ public class AdminView {
 
         root.getChildren().addAll(
             header,
-            addTitle, addFieldRow, typeRow, addErrorLabel, addBtn,
-            fleetLabel, boatTable, removeErrorLabel, removeBtn,
-            rentalLabel, filterRow, rentalTable,
-            statsLabel, statsRow
+            new Label("Add New Boat"), addFieldRow, typeRow, addErrorLabel, addBtn,
+            new Label("Fleet Management"), boatTable, removeErrorLabel, removeBtn,
+            new Label("Rentals"), filterRow, rentalTable,
+            new Label("Sales Performance"), statsRow
         );
     }
 

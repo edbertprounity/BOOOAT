@@ -28,72 +28,42 @@ public class MemberView {
     }
 
     private void initView() {
-        // Declarations
-        Label welcomeLabel;
-        HBox header;
-        VBox filterVBox;
-        Label searchLabel;
-        TextField searchField;
-        HBox searchRow;
-        Label capRangeLabel;
-        TextField minCapField;
-        TextField maxCapField;
-        HBox capRow;
-        Label priceRangeLabel;
-        TextField minPriceField;
-        TextField maxPriceField;
-        HBox priceRow;
-        Label typeLabel;
-        ToggleGroup typeGroup;
-        HBox typeBox;
-        Button clearBtn;
-        VBox tableVBox;
-        Label availableBoatsLabel;
-        TableView<Boat> availableBoatsTable;
-        Button rentBtn;
-
-        // Initializations
         this.root = new VBox(20);
-        welcomeLabel = new Label();
+        Label welcomeLabel = new Label();
         this.detailsBtn = new Button("Member Details");
         this.logoutBtn = new Button("Logout");
-        header = new HBox(10, welcomeLabel, detailsBtn, logoutBtn);
+        HBox header = new HBox(10, welcomeLabel, detailsBtn, logoutBtn);
 
-        filterVBox = new VBox(10);
-        searchLabel = new Label("Search Name:");
-        searchField = new TextField();
+        VBox filterVBox = new VBox(10);
+        TextField searchField = new TextField();
         searchField.setPromptText("Enter boat name or keyword");
-        searchRow = new HBox(5, searchLabel, searchField);
+        HBox searchRow = new HBox(5, new Label("Search Name:"), searchField);
 
-        capRangeLabel = new Label("Capacity (Min/Max):");
-        minCapField = new TextField();
-        maxCapField = new TextField();
+        TextField minCapField = new TextField();
+        TextField maxCapField = new TextField();
         minCapField.setPromptText("Min");
         maxCapField.setPromptText("Max");
-        capRow = new HBox(5, minCapField, maxCapField);
+        HBox capRow = new HBox(5, minCapField, maxCapField);
 
-        priceRangeLabel = new Label("Price (Min/Max):");
-        minPriceField = new TextField();
-        maxPriceField = new TextField();
+        TextField minPriceField = new TextField();
+        TextField maxPriceField = new TextField();
         minPriceField.setPromptText("Min");
         maxPriceField.setPromptText("Max");
-        priceRow = new HBox(5, minPriceField, maxPriceField);
+        HBox priceRow = new HBox(5, minPriceField, maxPriceField);
 
-        typeLabel = new Label("Boat Type:");
-        typeGroup = new ToggleGroup();
-        typeBox = new HBox(5);
+        ToggleGroup typeGroup = new ToggleGroup();
+        HBox typeBox = new HBox(5);
         for (BoatType bt : BoatType.values()) {
             RadioButton rb = new RadioButton(bt.name());
             rb.setToggleGroup(typeGroup);
             rb.setUserData(bt);
             typeBox.getChildren().add(rb);
         }
-        clearBtn = new Button("Clear Filters");
+        Button clearBtn = new Button("Clear Filters");
 
-        tableVBox = new VBox(10);
-        availableBoatsLabel = new Label("Available Boats:");
-        availableBoatsTable = createBoatTable();
-        rentBtn = new Button("Rent Selected Boat");
+        VBox tableVBox = new VBox(10);
+        TableView<Boat> availableBoatsTable = createBoatTable();
+        Button rentBtn = new Button("Rent Selected Boat");
 
         // Configuration and Layout
         root.setAlignment(Pos.TOP_LEFT);
@@ -144,9 +114,9 @@ public class MemberView {
 
         filterVBox.getChildren().addAll(
             searchRow,
-            capRangeLabel, capRow,
-            priceRangeLabel, priceRow,
-            typeLabel, typeBox,
+            new Label("Capacity (Min/Max):"), capRow,
+            new Label("Price (Min/Max):"), priceRow,
+            new Label("Boat Type:"), typeBox,
             clearBtn
         );
 
@@ -156,7 +126,7 @@ public class MemberView {
                 showRentDialog(selected);
             }
         });
-        tableVBox.getChildren().addAll(availableBoatsLabel, availableBoatsTable, rentBtn);
+        tableVBox.getChildren().addAll(new Label("Available Boats:"), availableBoatsTable, rentBtn);
         detailsBtn.setOnAction(e -> showDetailsWindow());
         root.getChildren().addAll(header, filterVBox, tableVBox);
     }

@@ -1,16 +1,16 @@
-import java.util.List;
-import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Member extends User {
-    private List<Boat> rentalHistory;
-    private List<Boat> currentRental;
+    private ObservableList<Boat> rentalHistory;
+    private ObservableList<Boat> currentRental;
     private MemberType membership;
     private int point;
 
     public Member(String memberName, String username, String password) {
         super(memberName, username, password);
-        this.rentalHistory = new ArrayList<>();
-        this.currentRental = new ArrayList<>();
+        this.rentalHistory = FXCollections.observableArrayList();
+        this.currentRental = FXCollections.observableArrayList();
         this.membership = MemberType.SILVER;
         this.point = 0;
     }
@@ -27,11 +27,11 @@ public class Member extends User {
         boat.setAvailability(true);
     }
 
-    public List<Boat> getRentalHistory() {
+    public ObservableList<Boat> getRentalHistory() {
         return rentalHistory;
     }
 
-    public List<Boat> getCurrentRental() {
+    public ObservableList<Boat> getCurrentRental() {
         return currentRental;
     }
 
@@ -64,13 +64,12 @@ public class Member extends User {
     }
 
     public void setName(String name) {
-        this.name = name;
         this.nameProperty().set(name);
     }
 
     @Override
     public String toString() {
-        return "Member[name=" + name + ", username=" + username + ", membership=" + membership + ", points=" + point
+        return "Member[name=" + getName() + ", username=" + getUsername() + ", membership=" + membership + ", points=" + point
                 + "]";
     }
 }

@@ -1,8 +1,10 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoatManager {
-    private List<Boat> boats = new ArrayList<>();
+    private ObservableList<Boat> boats = FXCollections.observableArrayList();
 
     public BoatManager() {
     }
@@ -15,17 +17,8 @@ public class BoatManager {
         boats.remove(boat);
     }
 
-    public List<Boat> getAllBoats() {
+    public ObservableList<Boat> getAllBoats() {
         return boats;
-    }
-
-    public Boat findByName(String name) {
-        for (Boat b : boats) {
-            if (b.getName().equals(name)) {
-                return b;
-            }
-        }
-        return null;
     }
 
     public List<Boat> search(String keyword, int minCapacity, int maxCapacity, BoatType type, double minPrice,
@@ -67,15 +60,5 @@ public class BoatManager {
         }
 
         return result;
-    }
-
-    public List<Boat> findAvailableBoat() {
-        List<Boat> availableBoats = new ArrayList<>();
-        for (Boat b : this.getAllBoats()) {
-            if (b.isAvailable()) {
-                availableBoats.add(b);
-            }
-        }
-        return availableBoats;
     }
 }

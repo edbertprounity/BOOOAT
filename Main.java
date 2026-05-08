@@ -2,7 +2,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class GUIMain extends Application {
+public class Main extends Application {
     
     @Override
     public void start(Stage primaryStage) {
@@ -42,13 +42,13 @@ public class GUIMain extends Application {
         loginView.getLoginButton().setOnAction(e -> {
             User user = loginController.processLogin();
             if (user instanceof Member) {
-                MemberModel memModel = new MemberModel();
-                memModel.setBoatManager(boatManager);
-                memModel.setRentalManager(rentalManager);
-                memModel.setMember((Member) user);
+                MemberModel memberModel = new MemberModel();
+                memberModel.setBoatManager(boatManager);
+                memberModel.setRentalManager(rentalManager);
+                memberModel.setMember((Member) user);
                 
-                MemberController memCtrl = new MemberController(memModel);
-                MemberView memView = new MemberView(memCtrl, memModel);
+                MemberController memberControl = new MemberController(memberModel);
+                MemberView memView = new MemberView(memberControl, memberModel);
                 
                 memView.getLogoutButton().setOnAction(logoutEvt -> mainScene.setRoot(loginView.asParent()));
                 mainScene.setRoot(memView.asParent());

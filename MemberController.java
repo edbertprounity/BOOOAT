@@ -5,7 +5,7 @@ public class MemberController {
 
     public MemberController(MemberModel model) {
         this.model = model;
-        refreshData();
+        applyFilters();
     }
 
     public void updateSearch(String keyword) {
@@ -105,7 +105,7 @@ public class MemberController {
         }
 
         model.getMember().confirmMembership();
-        refreshData();
+        applyFilters();
         model.appliedDiscountCodeProperty().set("");
         model.rentalDurationProperty().set(1);
     }
@@ -115,12 +115,12 @@ public class MemberController {
             return;
         }
         model.getRentalManager().returnBoat(model.getMember(), boat);
-        refreshData();
+        applyFilters();
     }
 
     public void updateProfileName(String newName) {
         model.getMember().setName(newName);
-        refreshData();
+        model.setMemberData(model.getMember());
     }
 
     public void updatePassword(String password, String confirmPassword) {
@@ -131,11 +131,6 @@ public class MemberController {
 
         model.getMember().updatePassword(password);
         model.passwordErrorProperty().set("");
-    }
-
-    public void refreshData() {
-        model.setMemberData(model.getMember());
-        model.setAvailableBoats(model.getBoatManager().findAvailableBoat());
     }
 
     private int convertStringToInt(String s) {

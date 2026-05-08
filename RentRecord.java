@@ -4,14 +4,12 @@ public class RentRecord {
 
     private Member member;
     private Boat boat;
-    private double price;
     private boolean isActive;
     private final SimpleDoubleProperty priceProperty;
 
     public RentRecord(Member member, Boat boat, double price) {
         this.member = member;
         this.boat = boat;
-        this.price = price;
         this.isActive = true;
         this.priceProperty = new SimpleDoubleProperty(price);
     }
@@ -25,7 +23,7 @@ public class RentRecord {
     }
 
     public double getPrice() {
-        return price;
+        return priceProperty.get();
     }
 
     public SimpleDoubleProperty priceProperty() {
@@ -43,6 +41,6 @@ public class RentRecord {
 
     @Override
     public String toString() {
-        return "Member: " + member.getUsername() + " \nBoat: " + boat.getName() +" \nPrice: " + price +"\nActive: " + isActive;
+        return "Member: " + member.getUsername() + " \nBoat: " + boat.getName() +" \nPrice: " + getPrice() +"\nActive: " + isActive;
     }
 }

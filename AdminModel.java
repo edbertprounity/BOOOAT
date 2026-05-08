@@ -52,17 +52,7 @@ public class AdminModel {
         return activeRentalsCount;
     }
 
-    public void setBoats(java.util.List<Boat> boats) {
-        this.allBoats.setAll(boats);
-    }
-
     public void setRentals(java.util.List<RentRecord> rentals) {
         this.allRentals.setAll(rentals);
-    }
-
-    public void updateStats(double revenue, int total, int active) {
-        this.totalRevenue.set(String.format("$%.2f", revenue));
-        this.totalRentalsCount.set("" + total);
-        this.activeRentalsCount.set("" + active);
     }
 }

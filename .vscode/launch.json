@@ -2,7 +2,7 @@
     "configurations": [
         {
             "type": "java",
-            "name": "GUIMain",
+            "name": "Main",
             "request": "launch",
             "mainClass": "GUIMain",
             "projectName": "BOOOAT_e3236fde",

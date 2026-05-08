@@ -6,7 +6,6 @@ public class AdminController {
 
     public AdminController(AdminModel model) {
         this.model = model;
-        refreshData();
     }
 
     public void addBoat(String name, String priceStr, BoatType type, String capacityStr) {
@@ -25,7 +24,6 @@ public class AdminController {
         }
 
         model.getBoatManager().addBoat(new Boat(name, price, type, capacity));
-        refreshData();
     }
 
     private int convertStringToInt(String s) {
@@ -60,7 +58,6 @@ public class AdminController {
         }
 
         model.getBoatManager().removeBoat(boat);
-        refreshData();
         return true;
     }
 
@@ -83,24 +80,5 @@ public class AdminController {
     public void applyRentalFilter(String type) {
         List<RentRecord> filtered = filterRentals(type);
         model.setRentals(filtered);
-    }
-
-    public void refreshData() {
-        List<Boat> boats = model.getBoatManager().getAllBoats();
-        List<RentRecord> records = model.getRentalManager().getAllRecords();
-
-        model.setBoats(boats);
-        model.setRentals(records);
-
-        double revenue = 0;
-        int active = 0;
-        for (RentRecord record : records) {
-            revenue += record.getPrice();
-            if (record.isActive()) {
-                active++;
-            }
-        }
-        int totalRentals = records.size();
-        model.updateStats(revenue, totalRentals, active);
     }
 }

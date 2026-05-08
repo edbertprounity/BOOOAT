@@ -1,3 +1,5 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -6,7 +8,7 @@ public class RentalManager {
     public RentalManager() {
     }
 
-    private List<RentRecord> records = new ArrayList<>();
+    private ObservableList<RentRecord> records = FXCollections.observableArrayList();
 
     public void rentBoat(Member member, Boat boat, int duration) {
 
@@ -106,7 +108,7 @@ public class RentalManager {
         System.out.println("No active rental found.");
     }
 
-    public List<RentRecord> getAllRecords() {
+    public ObservableList<RentRecord> getAllRecords() {
         return records;
     }
 
