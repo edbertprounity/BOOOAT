@@ -34,6 +34,10 @@ public class MemberModel {
     private final ObservableList<Boat> currentRentals = FXCollections.observableArrayList();
     private final ObservableList<Boat> rentalHistory = FXCollections.observableArrayList();
 
+    MemberModel(){
+
+    }
+    
     public void setBoatManager(BoatManager boatManager) {
         this.boatManager = boatManager;
     }

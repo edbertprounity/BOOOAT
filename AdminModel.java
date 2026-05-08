@@ -1,6 +1,7 @@
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import java.util.List;
 
 public class AdminModel {
     private BoatManager boatManager;
@@ -52,7 +53,7 @@ public class AdminModel {
         return activeRentalsCount;
     }
 
-    public void setRentals(java.util.List<RentRecord> rentals) {
+    public void setRentals(List<RentRecord> rentals) {
         this.allRentals.setAll(rentals);
     }
 }
