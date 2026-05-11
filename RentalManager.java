@@ -10,6 +10,11 @@ public class RentalManager {
 
     private ObservableList<RentRecord> records = FXCollections.observableArrayList();
 
+    // MVC STEP 7 — DOMAIN LAYER IS INDEPENDENT OF THE UI
+    // RentalManager and Member contain zero JavaFX imports
+    // for their core logic. This is why the migration was clean.
+
+    // RentalManager.java — rentBoat() is identical to Project A
     public void rentBoat(Member member, Boat boat, int duration) {
 
         if (member == null || boat == null) {
@@ -22,11 +27,14 @@ public class RentalManager {
             return;
         }
 
+        // DOMAIN: delegates availability + points to Member
         member.addRental(boat);
 
         double price = calculatePrice(boat, duration, member);
 
         RentRecord record = new RentRecord(member, boat, price);
+        // DOMAIN: adds to ObservableList — RentalManager doesn't
+        // know or care that a TableView is watching this list
         records.add(record);
 
         System.out.println("Boat rented successfully. Total price: $" + price);

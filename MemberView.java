@@ -120,9 +120,18 @@ public class MemberView {
             clearBtn
         );
 
+        // MVC STEP 1 — VIEW CAPTURES USER EVENT
+        // The View's only job: detect the click and pass the
+        // selected Boat object to the Controller. No logic here.
+
         rentBtn.setOnAction(e -> {
+            // VIEW: read selection from TableView (UI state only)
             Boat selected = availableBoatsTable.getSelectionModel().getSelectedItem();
+
+            // VIEW: guard — if nothing selected, do nothing
             if (selected != null) {
+                // VIEW: delegate immediately to a View helper method
+                // that builds the dialog — still inside the View layer
                 showRentDialog(selected);
             }
         });
@@ -131,15 +140,22 @@ public class MemberView {
         root.getChildren().addAll(header, filterVBox, tableVBox);
     }
 
+
+    // MVC STEP 2 — VIEW BUILDS SECONDARY WINDOW
+    // Still purely View. Creating a Stage + Scene is UI work.
+    // The View builds the layout; it does NOT calculate prices.
     private void showRentDialog(Boat boat) {
         Stage dialog = new Stage();
         dialog.initOwner(root.getScene().getWindow());
+        // Modality blocks the main window while dialog is open
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Confirm Booking");
 
         VBox layout = new VBox(10);
         layout.setAlignment(Pos.CENTER_LEFT);
 
+        // VIEW: bind boat name label directly to the property —
+        // if the name ever changes, the label auto-updates
         Label boatNameLabel = new Label();
         boatNameLabel.textProperty().bind(boat.nameProperty());
         HBox boatRow = new HBox(5, new Label("Boat:"), boatNameLabel);
@@ -166,17 +182,33 @@ public class MemberView {
         Button applyCodeBtn = new Button("Apply Code"); // This button is fine as is
         HBox codeRow = new HBox(10, new Label("Discount Code:"), codeField, applyCodeBtn);
         codeRow.setAlignment(Pos.CENTER_LEFT);
-
+   
+        // VIEW: bind the running total to the Model property.
+        // The Controller will update the Model; the View just displays it.
         Label totalLabel = new Label("Total: $0.00");
         totalLabel.textProperty().bind(model.rentalTotalPriceProperty().asString("Total: $%.2f"));
 
+
+        // MVC STEP 3 — VIEW DELEGATES INPUT CHANGE TO CONTROLLER
+        // The View detects every keystroke in the duration field
+        // and passes the raw String to the Controller.
+        // The View does NOT parse the String — that is Controller work.
         durationField.textProperty().addListener((obs, oldVal, newVal) -> {
             controller.updateRentalDuration(boat, newVal);
         });
 
+        // MVC STEP 4 — DISCRETE ACTION (button, not a live listener)
+        // "Apply Code" is a deliberate user action, not a live keystroke.
+        // That is why it uses setOnAction instead of a textProperty listener.
+
+        // VIEW: button wires directly to controller method
         applyCodeBtn.setOnAction(e -> controller.applyDiscountCode(boat, codeField.getText()));
 
         Button confirmBtn = new Button("Confirm Booking");
+        // MVC STEP 5 — THE CORE ACTION
+        // Confirm triggers the full rental transaction.
+
+        // VIEW: button fires the controller method, then closes dialog
         confirmBtn.setOnAction(e -> {
             controller.executeRental(boat);
             dialog.close();
@@ -190,6 +222,9 @@ public class MemberView {
 
         layout.getChildren().addAll(boatRow, detailRow, durationRow, codeRow, totalLabel, btnRow);
 
+            
+        // VIEW: seed the controller with an initial duration of 1
+        // so the total shows a price immediately on open
         controller.updateRentalDuration(boat, "1");
         dialog.setScene(new Scene(layout, 350, 250));
         dialog.show();

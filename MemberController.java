@@ -73,16 +73,27 @@ public class MemberController {
         model.setAvailableBoats(filtered);
     }
 
+
+    // ─────────────Step 3────────────────────────
+    // CONTROLLER receives the call:
+    // MemberController.java — updateRentalDuration()
     public void updateRentalDuration(Boat boat, String durationStr) {
+        // CONTROLLER: parse and validate — Views never do this
         int duration = convertStringToInt(durationStr);
         if (duration <= 0) {
             duration = 1;
         }
+        // CONTROLLER → MODEL: write validated value to Model property
         model.rentalDurationProperty().set(duration);
+        // CONTROLLER: trigger price recalculation
         calculateTotal(boat);
     }
 
+    // ───────────────Step 4───────────────────────
+    // CONTROLLER receives the call:
+    // MemberController.java — applyDiscountCode()
     public void applyDiscountCode(Boat boat, String code) {
+        // CONTROLLER => MODEL: store the code string
         model.appliedDiscountCodeProperty().set(code);
         calculateTotal(boat);
     }
@@ -90,22 +101,36 @@ public class MemberController {
     private void calculateTotal(Boat boat) {
         int duration = model.rentalDurationProperty().get();
         String code = model.appliedDiscountCodeProperty().get();
+        // CONTROLLER calls into the Domain layer (RentalManager)
         double price = model.getRentalManager().calculatePrice(boat, duration, model.getMember(), code);
+        // CONTROLLER => MODEL: store result; bound label auto-updates
         model.rentalTotalPriceProperty().set(price);
     }
-
+    // ────────────────Step 5─────────────────
+    // CONTROLLER: MemberController.java — executeRental()
     public void executeRental(Boat boat) {
+        
+        // CONTROLLER: read confirmed values from Model state
         int duration = model.rentalDurationProperty().get();
         String discountCode = model.appliedDiscountCodeProperty().get();
 
+        // CONTROLLER => DOMAIN: call the correct overload
         if (discountCode == null || discountCode.isEmpty()) {
             model.getRentalManager().rentBoat(model.getMember(), boat, duration);
         } else {
             model.getRentalManager().rentBoat(model.getMember(), boat, duration, discountCode);
         }
 
+        // DOMAIN: Member.addRental() — sets boat availability = false,
+        // adds to currentRental ObservableList, adds 3000 points
+        // CONTROLLER: recalculate membership tier after rental
         model.getMember().confirmMembership();
+        
+        // CONTROLLER: re-run search filter so rented boat
+        // disappears from the available boats TableView
         applyFilters();
+        
+        // CONTROLLER: reset dialog state for next rental
         model.appliedDiscountCodeProperty().set("");
         model.rentalDurationProperty().set(1);
     }

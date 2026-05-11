@@ -5,11 +5,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+// MVC STEP 6 — MODEL ACTS AS THE SINGLE SOURCE OF TRUTH
+// These are the JavaFX properties that the View binds to.
+// The Controller writes to them; the View reads from them automatically.
 public class MemberModel {
     private BoatManager boatManager;
     private RentalManager rentalManager;
     private Member member;
 
+    // Profile properties — bound to labels in the Details window
     private final SimpleStringProperty name = new SimpleStringProperty("");
     private final SimpleStringProperty username = new SimpleStringProperty("");
     private final SimpleStringProperty points = new SimpleStringProperty("0");
@@ -19,6 +23,7 @@ public class MemberModel {
 
     // UI State for Dialogs
     private final SimpleStringProperty passwordError = new SimpleStringProperty("");
+    // Rental dialog state — Controller writes, View displays
     private final SimpleIntegerProperty rentalDuration = new SimpleIntegerProperty(1);
     private final SimpleStringProperty appliedDiscountCode = new SimpleStringProperty("");
     private final SimpleDoubleProperty rentalTotalPrice = new SimpleDoubleProperty(0.0);
@@ -30,6 +35,8 @@ public class MemberModel {
     private final SimpleDoubleProperty maxPrice = new SimpleDoubleProperty(-1.0);
     private final SimpleObjectProperty<BoatType> filterType = new SimpleObjectProperty<>(null);
 
+    // Available boats — Controller writes via setAvailableBoats(),
+    // TableView in the View is bound directly to this list
     private final ObservableList<Boat> availableBoats = FXCollections.observableArrayList();
     private final ObservableList<Boat> currentRentals = FXCollections.observableArrayList();
     private final ObservableList<Boat> rentalHistory = FXCollections.observableArrayList();
@@ -162,13 +169,14 @@ public class MemberModel {
     public ObservableList<Boat> getRentalHistory() {
         return rentalHistory;
     }
-
+    // Called after every rental to keep UI current
     public void setMemberData(Member member) {
         this.name.set(member.getName());
         this.username.set(member.getUsername());
         this.points.set("" + member.getPoint());
         this.tier.set(member.getMembership().toString());
         this.discount.set(String.format("%.0f%%", member.discount() * 100));
+        // These two update the Details window's rental tables
         this.currentRentals.setAll(member.getCurrentRental());
         this.rentalHistory.setAll(member.getRentalHistory());
         this.welcomeText.set(member.getName() + " [" + member.getMembership() + "]");

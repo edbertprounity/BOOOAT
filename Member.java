@@ -15,10 +15,11 @@ public class Member extends User {
         this.point = 0;
     }
 
+    // Member.java — addRental() is identical to Project A
     public void addRental(Boat boat) {
-        currentRental.add(boat);
+        currentRental.add(boat);    // ObservableList in B, ArrayList in A
         this.point += 3000;
-        boat.setAvailability(false);
+        boat.setAvailability(false);    // triggers Boat's SimpleBooleanProperty
     }
 
     public void returnBoat(Boat boat) {
