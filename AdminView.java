@@ -29,7 +29,7 @@ public class AdminView {
         this.root = new VBox(15);
         this.logoutBtn = new Button("Logout");
         HBox header = new HBox(10, new Label("Admin Control Panel"), logoutBtn);
-        
+
         TextField nameField = new TextField();
         nameField.setPromptText("Boat name");
         TextField priceField = new TextField();
@@ -38,7 +38,8 @@ public class AdminView {
         capField.setPromptText("Capacity");
         configDoubleField(priceField);
         configIntField(capField);
-        HBox addFieldRow = new HBox(10, new Label("Name:"), nameField, new Label("Price:"), priceField, new Label("Capacity:"), capField);
+        HBox addFieldRow = new HBox(10, new Label("Name:"), nameField, new Label("Price:"), priceField,
+                new Label("Capacity:"), capField);
 
         ToggleGroup typeGroup = new ToggleGroup();
         HBox typeBox = new HBox(10);
@@ -48,6 +49,7 @@ public class AdminView {
             rb.setUserData(bt);
             typeBox.getChildren().add(rb);
         }
+
         HBox typeRow = new HBox(10, new Label("Type:"), typeBox);
 
         Label addErrorLabel = new Label("");
@@ -69,11 +71,10 @@ public class AdminView {
         Label revenueValue = new Label();
         Label totalValue = new Label();
         Label activeValue = new Label();
-        HBox statsRow = new HBox(20, 
-            new HBox(5, new Label("Revenue:"), revenueValue),
-            new HBox(5, new Label("Total Rentals:"), totalValue),
-            new HBox(5, new Label("Active:"), activeValue)
-        );
+        HBox statsRow = new HBox(20,
+                new HBox(5, new Label("Revenue:"), revenueValue),
+                new HBox(5, new Label("Total Rentals:"), totalValue),
+                new HBox(5, new Label("Active:"), activeValue));
 
         // Alignment and Binding
         root.setAlignment(Pos.TOP_LEFT);
@@ -100,9 +101,9 @@ public class AdminView {
             }
 
             boolean filled = selected != null
-                && !nameField.getText().trim().isEmpty()
-                && !priceField.getText().trim().isEmpty()
-                && !capField.getText().trim().isEmpty();
+                    && !nameField.getText().trim().isEmpty()
+                    && !priceField.getText().trim().isEmpty()
+                    && !capField.getText().trim().isEmpty();
 
             if (!filled) {
                 addErrorLabel.setText("Please fill in all fields and select a type.");
@@ -116,7 +117,7 @@ public class AdminView {
             typeGroup.selectToggle(null);
             addErrorLabel.setText("");
         });
-        
+
         removeBtn.setOnAction(e -> {
             Boat selected = boatTable.getSelectionModel().getSelectedItem();
             if (selected == null) {
@@ -129,7 +130,7 @@ public class AdminView {
                 removeErrorLabel.setText("Cannot remove: boat has an active rental.");
             }
         });
-        
+
         filterGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null) {
                 return;
@@ -138,12 +139,11 @@ public class AdminView {
         });
 
         root.getChildren().addAll(
-            header,
-            new Label("Add New Boat"), addFieldRow, typeRow, addErrorLabel, addBtn,
-            new Label("Fleet Management"), boatTable, removeErrorLabel, removeBtn,
-            new Label("Rentals"), filterRow, rentalTable,
-            new Label("Sales Performance"), statsRow
-        );
+                header,
+                new Label("Add New Boat"), addFieldRow, typeRow, addErrorLabel, addBtn,
+                new Label("Fleet Management"), boatTable, removeErrorLabel, removeBtn,
+                new Label("Rentals"), filterRow, rentalTable,
+                new Label("Sales Performance"), statsRow);
     }
 
     private TableView<Boat> createBoatTable() {
