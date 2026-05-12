@@ -75,7 +75,9 @@ public class AdminModel {
     }
 
     public void updateStats() {
-        if (rentalManager == null) return;
+        if (rentalManager == null) {
+            return;
+        }
 
         double totalRev = 0;
         int activeCount = 0;
@@ -83,7 +85,9 @@ public class AdminModel {
 
         for (RentRecord r : all) {
             totalRev += r.getPrice();
-            if (r.isActive()) activeCount++;
+            if (r.isActive()) {
+                activeCount++;
+            }
         }
 
         totalRevenue.set(totalRev);
