@@ -74,7 +74,7 @@ public class AdminController {
     public List<RentRecord> filterRentals(String type) {
         if (type.equals("Active")) {
             return model.getRentalManager().getActiveRecords();
-        } 
+        }
         if (type.equals("Completed")) {
             List<RentRecord> completed = new ArrayList<>();
             for (RentRecord r : model.getRentalManager().getAllRecords()) {
