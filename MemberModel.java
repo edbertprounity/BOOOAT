@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import java.util.List;
 
 // MVC STEP 6 — MODEL ACTS AS THE SINGLE SOURCE OF TRUTH
 // These are the JavaFX properties that the View binds to.
@@ -182,7 +183,7 @@ public class MemberModel {
         this.welcomeText.set(member.getName() + " [" + member.getMembership() + "]");
     }
 
-    public void setAvailableBoats(java.util.List<Boat> boats) {
+    public void setAvailableBoats(List<Boat> boats) {
         this.availableBoats.setAll(boats);
     }
 
