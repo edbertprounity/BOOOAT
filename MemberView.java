@@ -250,7 +250,7 @@ public class MemberView {
         tierLabel.textProperty().bind(model.tierProperty());
 
         Label pointsLabel = new Label();
-        pointsLabel.textProperty().bind(model.pointsProperty());
+        pointsLabel.textProperty().bind(model.pointsProperty().asString());
 
         Label discountLabel = new Label();
         discountLabel.textProperty().bind(model.discountProperty());

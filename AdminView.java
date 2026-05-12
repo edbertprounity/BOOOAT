@@ -88,9 +88,13 @@ public class AdminView {
         this.rentalTable = createRentalTable();
         this.rentalTable.setItems(model.getAllRentals());
 
-        revenueValue.textProperty().bind(model.totalRevenueProperty());
-        totalValue.textProperty().bind(model.totalRentalsCountProperty());
-        activeValue.textProperty().bind(model.activeRentalsCountProperty());
+        // Bind using asString() just like your ArithmeticView example
+        revenueValue.textProperty().bind(model.totalRevenueProperty().asString("$%.2f"));
+        totalValue.textProperty().bind(model.totalRentalsCountProperty().asString());
+        activeValue.textProperty().bind(model.activeRentalsCountProperty().asString());
+        
+        addErrorLabel.textProperty().bind(model.addErrorProperty());
+        removeErrorLabel.textProperty().bind(model.removeErrorProperty());
 
         // Event Handlers
         addBtn.setOnAction(e -> {
@@ -105,16 +109,16 @@ public class AdminView {
                 && !capField.getText().trim().isEmpty();
 
             if (!filled) {
-                addErrorLabel.setText("Please fill in all fields and select a type.");
+                model.addErrorProperty().set("Please fill in all fields and select a type.");
                 return;
             }
 
             controller.addBoat(nameField.getText(), priceField.getText(), selected, capField.getText());
+            model.addErrorProperty().set("");
             nameField.setText("");
             priceField.setText("");
             capField.setText("");
             typeGroup.selectToggle(null);
-            addErrorLabel.setText("");
         });
         
         removeBtn.setOnAction(e -> {
@@ -122,11 +126,12 @@ public class AdminView {
             if (selected == null) {
                 return;
             }
+            model.removeErrorProperty().set("");
             boolean removed = controller.removeBoat(selected);
             if (removed) {
-                removeErrorLabel.setText("");
+                model.removeErrorProperty().set("");
             } else {
-                removeErrorLabel.setText("Cannot remove: boat has an active rental.");
+                model.removeErrorProperty().set("Cannot remove: boat has an active rental.");
             }
         });
         

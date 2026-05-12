@@ -6,6 +6,10 @@ public class AdminController {
 
     public AdminController(AdminModel model) {
         this.model = model;
+        // Show all rentals by default when the view loads
+        applyRentalFilter("All");
+        refreshBoats();
+        model.updateStats();
     }
 
     public void addBoat(String name, String priceStr, BoatType type, String capacityStr) {
@@ -24,6 +28,11 @@ public class AdminController {
         }
 
         model.getBoatManager().addBoat(new Boat(name, price, type, capacity));
+        refreshBoats();
+    }
+
+    private void refreshBoats() {
+        model.setBoats(model.getBoatManager().getAllBoats());
     }
 
     private int convertStringToInt(String s) {
@@ -58,6 +67,7 @@ public class AdminController {
         }
 
         model.getBoatManager().removeBoat(boat);
+        refreshBoats();
         return true;
     }
 
@@ -80,5 +90,6 @@ public class AdminController {
     public void applyRentalFilter(String type) {
         List<RentRecord> filtered = filterRentals(type);
         model.setRentals(filtered);
+        model.updateStats();
     }
 }

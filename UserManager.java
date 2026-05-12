@@ -12,10 +12,6 @@ public class UserManager {
         users.add(user);
     }
 
-    public void removeUser(User user) {
-        users.remove(user);
-    }
-
     public User findByUsername(String username) {
         for (User u : users) {
             if (u.getUsername().equals(username)) {
@@ -23,9 +19,5 @@ public class UserManager {
             }
         }
         return null;
-    }
-
-    public List<User> getAllUsers() {
-        return users;
     }
 }

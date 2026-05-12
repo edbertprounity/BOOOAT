@@ -16,7 +16,7 @@ public class MemberModel {
     // Profile properties — bound to labels in the Details window
     private final SimpleStringProperty name = new SimpleStringProperty("");
     private final SimpleStringProperty username = new SimpleStringProperty("");
-    private final SimpleStringProperty points = new SimpleStringProperty("0");
+    private final SimpleIntegerProperty points = new SimpleIntegerProperty(0);
     private final SimpleStringProperty tier = new SimpleStringProperty("");
     private final SimpleStringProperty discount = new SimpleStringProperty("0%");
     private final SimpleStringProperty welcomeText = new SimpleStringProperty("");
@@ -78,7 +78,7 @@ public class MemberModel {
         return username;
     }
 
-    public SimpleStringProperty pointsProperty() {
+    public SimpleIntegerProperty pointsProperty() {
         return points;
     }
 
@@ -173,7 +173,7 @@ public class MemberModel {
     public void setMemberData(Member member) {
         this.name.set(member.getName());
         this.username.set(member.getUsername());
-        this.points.set("" + member.getPoint());
+        this.points.set(member.getPoint());
         this.tier.set(member.getMembership().toString());
         this.discount.set(String.format("%.0f%%", member.discount() * 100));
         // These two update the Details window's rental tables

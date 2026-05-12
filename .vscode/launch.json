@@ -4,16 +4,8 @@
             "type": "java",
             "name": "Main",
             "request": "launch",
-            "mainClass": "GUIMain",
-            "projectName": "BOOOAT_f7fc0e92",
-            "vmArgs": "--module-path \"/Users/karellyusdygo/Documents/UTS/VSC/javafx-sdk-26/lib\" --add-modules javafx.controls,javafx.fxml"
-        },
-        {
-            "type": "java",
-            "name": "GUIMain",
-            "request": "launch",
-            "mainClass": "GUIMain",
-            "projectName": "BOOOAT_e3236fde",
+            "mainClass": "Main",
+            "projectName": "BOOOAT_e3236fde", 
             "vmArgs": "--module-path \"javafx-sdk-26/lib/\" --add-modules javafx.controls,javafx.fxml"
         }
     ]

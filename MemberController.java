@@ -73,7 +73,6 @@ public class MemberController {
         model.setAvailableBoats(filtered);
     }
 
-
     // ─────────────Step 3────────────────────────
     // CONTROLLER receives the call:
     // MemberController.java — updateRentalDuration()
@@ -125,6 +124,8 @@ public class MemberController {
         // adds to currentRental ObservableList, adds 3000 points
         // CONTROLLER: recalculate membership tier after rental
         model.getMember().confirmMembership();
+
+        model.setMemberData(model.getMember());
         
         // CONTROLLER: re-run search filter so rented boat
         // disappears from the available boats TableView
@@ -140,6 +141,7 @@ public class MemberController {
             return;
         }
         model.getRentalManager().returnBoat(model.getMember(), boat);
+        model.setMemberData(model.getMember());
         applyFilters();
     }
 
